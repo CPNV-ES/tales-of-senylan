@@ -4,12 +4,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TalesOfSenylan
 {
-    public class Game1 : Game
+    public class TOSGame : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        public Game1()
+        public TOSGame()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
