@@ -6,12 +6,17 @@ namespace TalesOfSenylan
 {
     public class TOSGame : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
+
+        private int dungeonNumber = 1;
+        private Dungeon dungeon;
+
+        private KeyboardState keyboardState;
 
         public TOSGame()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -25,9 +30,16 @@ namespace TalesOfSenylan
 
         protected override void LoadContent()
         {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            LoadNextLevel();
+        }
+
+        private void LoadNextLevel()
+        {
+            dungeonNumber++;
+            this.dungeon = new Dungeon(Services, dungeonNumber);
         }
 
         protected override void Update(GameTime gameTime)
@@ -36,8 +48,15 @@ namespace TalesOfSenylan
                 Exit();
 
             // TODO: Add your update logic here
+            HandleInput(gameTime);
 
             base.Update(gameTime);
+        }
+
+        private void HandleInput(GameTime gameTime)
+        {
+            keyboardState = Keyboard.GetState();
+            dungeon.HandleInput(gameTime, keyboardState);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -45,6 +64,9 @@ namespace TalesOfSenylan
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            dungeon.Draw(gameTime, spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
