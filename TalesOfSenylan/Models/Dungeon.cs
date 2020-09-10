@@ -41,7 +41,7 @@ namespace TalesOfSenylan
             Player.Update(gameTime);
             if (Player.Collide(Enemy))
             {
-                Console.WriteLine("Collided");
+                Debug.WriteLine("Collided");
             }
         }
     }
