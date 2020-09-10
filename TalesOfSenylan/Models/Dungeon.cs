@@ -3,39 +3,46 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Diagnostics;
+using TalesOfSenylan.Models.Characters;
 
 namespace TalesOfSenylan
 {
     public class Dungeon
     {
-        public Player player;
-        private Vector2 start;
+        public Player Player { get; set; }
+        public Enemy Enemy { get; set; }
+        private Vector2 StartPosition;
 
-        private int dungeonNumber;
+        private int DungeonNumber;
 
-        public ContentManager content { get; }
+        public ContentManager Content { get; }
 
         public Dungeon(IServiceProvider serviceProvider, int dungeonNumber)
         {
-            content = new ContentManager(serviceProvider, "Content");
-            this.dungeonNumber = dungeonNumber;
-            this.start = new Vector2(250, 250);
+            Content = new ContentManager(serviceProvider, "Content");
+            DungeonNumber = dungeonNumber;
+            StartPosition = new Vector2(250, 250);
             InitializeLevel();
         }
         
         private void InitializeLevel()
         {
-            this.player = new Player(this, start);
+            Player = new Player(this, StartPosition);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            player.Draw(gameTime, spriteBatch);
+            Player.Draw(gameTime, spriteBatch);
         }
 
         public void Update(GameTime gameTime)
         {
-            player.Update(gameTime);
+            Player.Update(gameTime);
+            if (Player.Collide(Enemy))
+            {
+                Console.WriteLine("Collided");
+            }
         }
     }
 }
