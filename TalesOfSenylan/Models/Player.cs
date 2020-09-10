@@ -10,11 +10,9 @@ namespace TalesOfSenylan
         private Vector2 position;
         private float speed;
 
-        public Dungeon Dungeon
-        {
-            get { return dungeon; }
-        }
-        Dungeon dungeon;
+        private KeyboardState keyboardState;
+
+        public Dungeon dungeon { get; }
 
         public Player(Dungeon dungeon, Vector2 position)
         {
@@ -26,7 +24,7 @@ namespace TalesOfSenylan
 
         public void LoadContent()
         {
-            sprite = Dungeon.Content.Load<Texture2D>("ball");
+            sprite = dungeon.content.Load<Texture2D>("ball");
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -43,21 +41,27 @@ namespace TalesOfSenylan
                 0f
             );
         }
-        
-        public void HandleInput(GameTime gameTime, KeyboardState keyboardState)
+
+        public void Update(GameTime gameTime)
         {
-            if (keyboardState.IsKeyDown(Keys.Up))
+            HandleInput(gameTime);
+        }
+        
+        private void HandleInput(GameTime gameTime)
+        {
+            keyboardState = Keyboard.GetState();
+
+            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
                 position.Y -= speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (keyboardState.IsKeyDown(Keys.Down))
+            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
                 position.Y += speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (keyboardState.IsKeyDown(Keys.Left))
+            if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
                 position.X -= speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (keyboardState.IsKeyDown(Keys.Right))
+            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
                 position.X += speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
         }
-
     }
 }

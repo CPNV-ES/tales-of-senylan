@@ -13,11 +13,7 @@ namespace TalesOfSenylan
 
         private int dungeonNumber;
 
-        public ContentManager Content
-        {
-            get { return content; }
-        }
-        ContentManager content;
+        public ContentManager content { get; }
 
         public Dungeon(IServiceProvider serviceProvider, int dungeonNumber)
         {
@@ -37,9 +33,9 @@ namespace TalesOfSenylan
             player.Draw(gameTime, spriteBatch);
         }
 
-        public void HandleInput(GameTime gameTime, KeyboardState keyboardState)
+        public void Update(GameTime gameTime)
         {
-            player.HandleInput(gameTime, keyboardState);
+            player.Update(gameTime);
         }
     }
 }

@@ -12,8 +12,6 @@ namespace TalesOfSenylan
         private int dungeonNumber = 1;
         private Dungeon dungeon;
 
-        private KeyboardState keyboardState;
-
         public TOSGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -48,15 +46,9 @@ namespace TalesOfSenylan
                 Exit();
 
             // TODO: Add your update logic here
-            HandleInput(gameTime);
+            dungeon.Update(gameTime);
 
             base.Update(gameTime);
-        }
-
-        private void HandleInput(GameTime gameTime)
-        {
-            keyboardState = Keyboard.GetState();
-            dungeon.HandleInput(gameTime, keyboardState);
         }
 
         protected override void Draw(GameTime gameTime)
