@@ -57,7 +57,7 @@ namespace TalesOfSenylan
                 Position.X += Speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        public bool Collide(Collidable collidable)
+        public new bool Collide(Collidable collidable)
         {
             return true;
         }
