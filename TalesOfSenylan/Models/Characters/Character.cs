@@ -6,7 +6,7 @@ using System.Text;
 
 namespace TalesOfSenylan.Models.Characters
 {
-    public abstract class Character : Collidable
+    public abstract class Character
     {
         protected Texture2D Sprite;
         protected Vector2 Position;
@@ -17,11 +17,6 @@ namespace TalesOfSenylan.Models.Characters
         {
             Dungeon = dungeon;
             Position = initialPosition;
-        }
-
-        public bool Collide(Collidable collidable)
-        {
-            return false;
         }
     }
 }

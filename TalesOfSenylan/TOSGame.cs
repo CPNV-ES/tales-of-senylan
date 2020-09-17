@@ -57,7 +57,7 @@ namespace TalesOfSenylan
 
             // TODO: Add your drawing code here
             SpriteBatch.Begin();
-            Dungeon.Draw(gameTime, SpriteBatch);
+            Dungeon.Draw(gameTime, SpriteBatch, GraphicsDevice);
             SpriteBatch.End();
 
             base.Draw(gameTime);

@@ -31,18 +31,15 @@ namespace TalesOfSenylan
             Player = new Player(this, StartPosition);
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
         {
-            Player.Draw(gameTime, spriteBatch);
+            Player.Draw(gameTime, spriteBatch, graphicsDevice);
+            //spriteBatch.Draw()
         }
 
         public void Update(GameTime gameTime)
         {
             Player.Update(gameTime);
-            if (Player.Collide(Enemy))
-            {
-                Debug.WriteLine("Collided");
-            }
         }
     }
 }
