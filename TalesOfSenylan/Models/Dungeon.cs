@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
 using MonoGame.Extended.Collisions;
 using System;
 using System.Diagnostics;
@@ -33,23 +34,18 @@ namespace TalesOfSenylan
             Enemy = new Enemy(this, new Vector2(400, 400));
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Player.Draw(gameTime, spriteBatch, graphicsDevice);
-            Enemy.Draw(gameTime, spriteBatch, graphicsDevice);
+            Player.Draw(gameTime, spriteBatch);
+            Enemy.Draw(gameTime, spriteBatch);
         }
 
         public void Update(GameTime gameTime)
         {
             Player.Update(gameTime);
-            if (Player.getHitbox().Intersects(Enemy.getHitbox()))
+            if (Player.IsCollided(Enemy.getHitbox()))
             {
                 
-                Debug.WriteLine("Collides");
-            }
-            else
-            {
-                Debug.WriteLine("No collision");
             }
         }
     }

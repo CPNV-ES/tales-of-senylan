@@ -27,7 +27,7 @@ namespace TalesOfSenylan
             Sprite = Dungeon.Content.Load<Texture2D>("ball");
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
                 Sprite,
@@ -38,10 +38,10 @@ namespace TalesOfSenylan
                 new Vector2(Sprite.Width / 2, Sprite.Height / 2),
                 Vector2.One,
                 SpriteEffects.None,
-                0f
+                0.0f
             );
 
-            base.DrawHitbox(spriteBatch, graphicsDevice);
+            DrawHitbox(spriteBatch);
         }
 
         public override void Update(GameTime gameTime)
@@ -55,6 +55,7 @@ namespace TalesOfSenylan
         {
             KeyboardState = Keyboard.GetState();
 
+            // Keys Input 
             if (KeyboardState.IsKeyDown(Keys.Up) || KeyboardState.IsKeyDown(Keys.W))
                 Position.Y -= Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -66,6 +67,11 @@ namespace TalesOfSenylan
 
             if (KeyboardState.IsKeyDown(Keys.Right) || KeyboardState.IsKeyDown(Keys.D))
                 Position.X += Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        private void DoDamage()
+        {
+            Debug.WriteLine("ATTACK");
         }
     }
 }

@@ -21,7 +21,7 @@ namespace TalesOfSenylan.Models.Characters
             Sprite = Dungeon.Content.Load<Texture2D>("orc");
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
                 Sprite,
@@ -32,10 +32,10 @@ namespace TalesOfSenylan.Models.Characters
                 new Vector2(Sprite.Width / 2, Sprite.Height / 2),
                 Vector2.One,
                 SpriteEffects.None,
-                0f
+                0.1f
             );
 
-            base.DrawHitbox(spriteBatch, graphicsDevice);
+            DrawHitbox(spriteBatch);
         }
         public override void Update(GameTime gameTime)
         {
