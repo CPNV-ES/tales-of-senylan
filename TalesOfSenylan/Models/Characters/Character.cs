@@ -33,7 +33,7 @@ namespace TalesOfSenylan.Models.Characters
             spriteBatch.DrawRectangle(getHitbox(), Color.Red);
         }
 
-        public bool IsCollided(RectangleF E) => this.Hitbox.Intersects(E);
+        public bool IsCollided(RectangleF E) => Hitbox.Intersects(E);
 
         public abstract void Update(GameTime gameTime);
 

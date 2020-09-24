@@ -10,19 +10,27 @@ using MonoGame.Extended.Collisions;
 
 namespace TalesOfSenylan
 {
-
+    public enum State
+    {
+        Idle,
+        Attacking,
+        Walking
+    }
     public class Player : Character
     {
         private KeyboardState KeyboardState;
+        private bool oneShot = false;
+        private int c = 0;
 
         public Player(Dungeon dungeon, Vector2 initialPosition) : base(dungeon, initialPosition)
         {
             LoadContent();
             Hitbox = new RectangleF(Position.X - Sprite.Width / 2, Position.Y - Sprite.Height / 2, Sprite.Width, Sprite.Height);
-
         }
 
-        public void LoadContent()
+		public State state { get; set; }
+
+		public void LoadContent()
         {
             Sprite = Dungeon.Content.Load<Texture2D>("ball");
         }
@@ -55,7 +63,32 @@ namespace TalesOfSenylan
         {
             KeyboardState = Keyboard.GetState();
 
-            // Keys Input 
+			switch (state)
+			{
+                case State.Idle:
+                    break;
+                case State.Walking:
+                    Move(gameTime);
+                    break;
+                case State.Attacking:
+                    if (KeyboardState.IsKeyDown(Keys.Space) && !oneShot)
+                        DoDamage();
+                        oneShot = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            if (KeyboardState.IsKeyUp(Keys.Space))
+                oneShot = false;
+        }
+
+        public void DoDamage()
+        {
+            Debug.WriteLine("ATTAQUE :" + c++ + " fois");
+        }
+        public void Move(GameTime gameTime)
+		{
             if (KeyboardState.IsKeyDown(Keys.Up) || KeyboardState.IsKeyDown(Keys.W))
                 Position.Y -= Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -67,11 +100,6 @@ namespace TalesOfSenylan
 
             if (KeyboardState.IsKeyDown(Keys.Right) || KeyboardState.IsKeyDown(Keys.D))
                 Position.X += Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-        }
-
-        private void DoDamage()
-        {
-            Debug.WriteLine("ATTACK");
         }
     }
 }
