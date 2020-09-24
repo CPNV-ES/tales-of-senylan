@@ -22,27 +22,26 @@ namespace TalesOfSenylan
         {
             Content = new ContentManager(serviceProvider, "Content");
             DungeonNumber = dungeonNumber;
-            StartPosition = new Vector2(250, 250);
+            StartPosition = new Vector2(200, 200);
             InitializeLevel();
         }
         
         private void InitializeLevel()
         {
             Player = new Player(this, StartPosition);
+            Enemy = new Enemy(this, StartPosition);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Player.Draw(gameTime, spriteBatch);
+            Enemy.Draw(gameTime, spriteBatch);
         }
 
         public void Update(GameTime gameTime)
         {
             Player.Update(gameTime);
-            if (Player.Collide(Enemy))
-            {
-                Debug.WriteLine("Collided");
-            }
+            Enemy.Update(gameTime);
         }
     }
 }
