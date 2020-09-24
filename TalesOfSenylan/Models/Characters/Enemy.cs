@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using TalesOfSenylan.Models.Utilities;
 
 namespace TalesOfSenylan.Models.Characters
 {
     public class Enemy : Character
     {
-        private float MovementDuration = 3;
+        private float MovementDuration;
         private TimeSpan CurrentMovementDuration;
 
         private bool HasMovedLeft = false;
@@ -18,6 +19,7 @@ namespace TalesOfSenylan.Models.Characters
 
         public Enemy(Dungeon dungeon, Vector2 position) : base(dungeon, position)
         {
+            MovementDuration = Utilities.Utilities.getRandomNumber(3);
             CurrentMovementDuration = new TimeSpan();
             LoadContent();
         }

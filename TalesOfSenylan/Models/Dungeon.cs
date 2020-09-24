@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using TalesOfSenylan.Models.Characters;
 
@@ -11,7 +13,7 @@ namespace TalesOfSenylan
     public class Dungeon
     {
         public Player Player { get; set; }
-        public Enemy Enemy { get; set; }
+        public List<Enemy> Enemies { get; set; }
         private Vector2 StartPosition;
 
         private int DungeonNumber;
@@ -29,19 +31,26 @@ namespace TalesOfSenylan
         private void InitializeLevel()
         {
             Player = new Player(this, StartPosition);
-            Enemy = new Enemy(this, StartPosition);
+            Enemies = new List<Enemy>();
+            Enemies.Add(new Enemy(this, StartPosition));
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Player.Draw(gameTime, spriteBatch);
-            Enemy.Draw(gameTime, spriteBatch);
+            foreach (Enemy enemy in Enemies)
+            {
+                enemy.Draw(gameTime, spriteBatch);
+            }
         }
 
         public void Update(GameTime gameTime)
         {
             Player.Update(gameTime);
-            Enemy.Update(gameTime);
+            foreach (Enemy enemy in Enemies)
+            {
+                enemy.Update(gameTime);
+            }
         }
     }
 }
