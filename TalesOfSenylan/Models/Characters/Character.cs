@@ -11,8 +11,8 @@ namespace TalesOfSenylan.Models.Characters
     public abstract class Character
     {
         protected Texture2D Sprite;
-        protected Vector2 Position;
-        protected float Speed = 200;
+        public Vector2 Position;
+        public float Speed { get; set; }
         protected RectangleF Hitbox;
         protected Dungeon Dungeon { get; }
 

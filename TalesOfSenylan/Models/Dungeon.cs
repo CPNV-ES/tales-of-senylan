@@ -16,7 +16,6 @@ namespace TalesOfSenylan
         public Enemy Enemy { get; set; }
         private Vector2 StartPosition;
 
-        private bool spacePressed = false;
         private int DungeonNumber;
         private KeyboardState KeyboardState;
 
@@ -33,7 +32,6 @@ namespace TalesOfSenylan
         private void InitializeLevel()
         {
             Player = new Player(this, StartPosition);
-            Player.state = State.Idle;
             Enemy = new Enemy(this, new Vector2(400, 400));
         }
 
@@ -47,19 +45,35 @@ namespace TalesOfSenylan
         {
             KeyboardState = Keyboard.GetState();
 
-            if (KeyboardState.GetPressedKeyCount() > 0)
-                Player.state = State.Walking;
-            else
-                Player.state = State.Idle;
-            
-            if (Player.IsCollided(Enemy.getHitbox()) && KeyboardState.IsKeyDown(Keys.Space) && !spacePressed)
-                Player.state = State.Attacking;
-                spacePressed = true;
-			
-            if (KeyboardState.IsKeyUp(Keys.Space))
-                spacePressed = false;
+            if (Player.IsCollided(Enemy.getHitbox()) && KeyboardState.IsKeyDown(Keys.Space))
+                HandleAttack(gameTime);
+               
+            HandleMovement(gameTime);
 
             Player.Update(gameTime);
+        }
+
+        //Player Movement Handling
+        public void HandleMovement(GameTime gameTime)
+        {
+            if (KeyboardState.IsKeyDown(Keys.Up) || KeyboardState.IsKeyDown(Keys.W))
+                Player.Position.Y -= Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (KeyboardState.IsKeyDown(Keys.Down) || KeyboardState.IsKeyDown(Keys.S))
+                Player.Position.Y += Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (KeyboardState.IsKeyDown(Keys.Left) || KeyboardState.IsKeyDown(Keys.A))
+                Player.Position.X -= Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (KeyboardState.IsKeyDown(Keys.Right) || KeyboardState.IsKeyDown(Keys.D))
+                Player.Position.X += Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        //Player Attack Handling
+        public void HandleAttack(GameTime gameTime)
+        {
+            if (KeyboardState.IsKeyDown(Keys.Space))
+                Player.DoDamage(gameTime);
         }
     }
 }
