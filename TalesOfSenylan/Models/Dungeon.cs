@@ -1,12 +1,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using TalesOfSenylan.Models.Characters;
+using TalesOfSenylan.Models.Utilities;
 
 namespace TalesOfSenylan
 {
@@ -32,7 +30,10 @@ namespace TalesOfSenylan
         {
             Player = new Player(this, StartPosition);
             Enemies = new List<Enemy>();
-            Enemies.Add(new Enemy(this, StartPosition));
+            for (int i = 0; i < this.DungeonNumber * 3; i++)
+            {
+                Enemies.Add(new Enemy(this, GenerateRandomStartingPosition()));
+            }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -51,6 +52,15 @@ namespace TalesOfSenylan
             {
                 enemy.Update(gameTime);
             }
+        }
+
+        public static Vector2 GenerateRandomStartingPosition()
+        {
+            // Todo: position shouldn't be between 20 and 200 => make it so it's more "dynamic" and respect dungeon bounds
+            int x = Utilities.getRandomNumber(20, 200);
+            int y = Utilities.getRandomNumber(20, 200);
+
+            return new Vector2(x, y);
         }
     }
 }

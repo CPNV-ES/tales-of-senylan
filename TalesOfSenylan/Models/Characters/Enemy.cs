@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using TalesOfSenylan.Models.Utilities;
 
 namespace TalesOfSenylan.Models.Characters
 {
@@ -19,14 +18,14 @@ namespace TalesOfSenylan.Models.Characters
 
         public Enemy(Dungeon dungeon, Vector2 position) : base(dungeon, position)
         {
-            MovementDuration = Utilities.Utilities.getRandomNumber(3);
+            MovementDuration = Utilities.Utilities.getRandomNumber(1, 3);
             CurrentMovementDuration = new TimeSpan();
             LoadContent();
         }
 
         public void LoadContent()
         {
-            Sprite = Dungeon.Content.Load<Texture2D>("ball");
+            Sprite = Dungeon.Content.Load<Texture2D>("orc");
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
