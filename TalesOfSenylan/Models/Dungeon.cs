@@ -30,7 +30,9 @@ namespace TalesOfSenylan
         {
             Player = new Player(this, StartPosition);
             Enemies = new List<Enemy>();
-            for (int i = 0; i < this.DungeonNumber * 3; i++)
+            // Todo: right now, the number of enemies per level is (DungeonNumber * 5) => make it more "intelligent"
+            // I tried to do it in an Enum before (by hard-coding number of enemies for each level), but didn't find much success.
+            for (int i = 0; i < this.DungeonNumber * 5; i++)
             {
                 Enemies.Add(new Enemy(this, GenerateRandomStartingPosition()));
             }
@@ -56,7 +58,7 @@ namespace TalesOfSenylan
 
         public static Vector2 GenerateRandomStartingPosition()
         {
-            // Todo: position shouldn't be between 20 and 200 => make it so it's more "dynamic" and respect dungeon bounds
+            // Todo: position shouldn't be between 20 and 200 => make it respect dungeon bounds.
             int x = Utilities.getRandomNumber(20, 200);
             int y = Utilities.getRandomNumber(20, 200);
 
