@@ -9,7 +9,7 @@ namespace TalesOfSenylan
         private GraphicsDeviceManager Graphics;
         private SpriteBatch SpriteBatch;
 
-        private int DungeonNumber = 1;
+        private int DungeonNumber = 0;
         private Dungeon Dungeon;
 
         public TOSGame()
