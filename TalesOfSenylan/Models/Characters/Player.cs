@@ -55,8 +55,7 @@ namespace TalesOfSenylan
 
         public override void Update(GameTime gameTime)
         {
-            Hitbox.X = Position.X - Sprite.Width / 2;
-            Hitbox.Y = Position.Y - Sprite.Height / 2;
+            setHitbox(Position.X, Position.Y);
         }
 
         public void DoDamage(GameTime gameTime)

@@ -94,12 +94,7 @@ namespace TalesOfSenylan.Models.Characters
                     HasMovedTop = false;
                 }
             }
-
-            Hitbox.X = Position.X - Sprite.Width / 2;
-            Hitbox.Y = Position.Y - Sprite.Height / 2;
-            // J'ai corrigé les mouvements (il n'y avait pas de Speed par défaut dans Character.cs alors
-            // je l'ai ajouté dans le constructeur d'Enemy)
-            // La hitbox ne bouge pas avec les ennemis par contre
+            setHitbox(Position.X, Position.Y);
         }
 
         private bool ShouldChangeDirection(GameTime gameTime)

@@ -27,6 +27,12 @@ namespace TalesOfSenylan.Models.Characters
             return Hitbox;
         }
 
+        public void setHitbox(float x, float y)
+		{
+            Hitbox.X = x - Sprite.Width / 2;
+            Hitbox.Y = y - Sprite.Height / 2;
+		}
+
         //Function used to debug hitbox
         public void DrawHitbox(SpriteBatch spriteBatch)
         {
