@@ -50,7 +50,7 @@ namespace TalesOfSenylan
                 0.0f
             );
 
-            DrawHitbox(spriteBatch);
+            //DrawHitbox(spriteBatch);
         }
 
         public override void Update(GameTime gameTime)

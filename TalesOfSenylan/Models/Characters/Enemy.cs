@@ -46,7 +46,7 @@ namespace TalesOfSenylan.Models.Characters
                 0.1f
             );
 
-            DrawHitbox(spriteBatch);
+            //DrawHitbox(spriteBatch);
         }
 
         public override void Update(GameTime gameTime)
