@@ -45,9 +45,9 @@ namespace TalesOfSenylan
         {
             KeyboardState = Keyboard.GetState();
 
-            if (Player.IsCollided(Enemy.getHitbox()) && KeyboardState.IsKeyDown(Keys.Space))
+            if (Player.IsCollided(Enemy.getHitbox()) && (KeyboardState.IsKeyDown(Keys.Space) || KeyboardState.IsKeyDown(Keys.K)))
                 HandleAttack(gameTime);
-               
+
             HandleMovement(gameTime);
 
             Player.Update(gameTime);
@@ -71,9 +71,8 @@ namespace TalesOfSenylan
 
         //Player Attack Handling
         public void HandleAttack(GameTime gameTime)
-        {
-            if (KeyboardState.IsKeyDown(Keys.Space))
-                Player.DoDamage(gameTime);
+        { 
+            Player.DoDamage(gameTime);
         }
     }
 }
