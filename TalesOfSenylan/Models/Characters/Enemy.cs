@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using System;
+using System.Diagnostics;
 
 namespace TalesOfSenylan.Models.Characters
 {
@@ -8,7 +10,7 @@ namespace TalesOfSenylan.Models.Characters
     {
         private float MovementDuration;
         private TimeSpan CurrentMovementDuration;
-
+        
         private bool HasMovedLeft = false;
         private bool HasMovedRight = false;
         private bool HasMovedTop = false;
@@ -20,7 +22,9 @@ namespace TalesOfSenylan.Models.Characters
         {
             MovementDuration = Utilities.Utilities.getRandomNumber(1, 3);
             CurrentMovementDuration = new TimeSpan();
+            Speed = 100;
             LoadContent();
+            Hitbox = new RectangleF(Position.X - Sprite.Width / 2, Position.Y - Sprite.Height / 2, Sprite.Width, Sprite.Height);
         }
 
         public void LoadContent()
@@ -28,7 +32,7 @@ namespace TalesOfSenylan.Models.Characters
             Sprite = Dungeon.Content.Load<Texture2D>("orc");
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
                 Sprite,
@@ -39,11 +43,13 @@ namespace TalesOfSenylan.Models.Characters
                 new Vector2(Sprite.Width / 2, Sprite.Height / 2),
                 Vector2.One,
                 SpriteEffects.None,
-                0f
+                0.1f
             );
+
+            DrawHitbox(spriteBatch);
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             CurrentMovementDuration = CurrentMovementDuration.Add(gameTime.ElapsedGameTime);
             
@@ -88,6 +94,12 @@ namespace TalesOfSenylan.Models.Characters
                     HasMovedTop = false;
                 }
             }
+
+            Hitbox.X = Position.X - Sprite.Width / 2;
+            Hitbox.Y = Position.Y - Sprite.Height / 2;
+            // J'ai corrigé les mouvements (il n'y avait pas de Speed par défaut dans Character.cs alors
+            // je l'ai ajouté dans le constructeur d'Enemy)
+            // La hitbox ne bouge pas avec les ennemis par contre
         }
 
         private bool ShouldChangeDirection(GameTime gameTime)

@@ -1,27 +1,43 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace TalesOfSenylan.Models.Characters
 {
-    public abstract class Character : Collidable
+    public abstract class Character
     {
         protected Texture2D Sprite;
-        protected Vector2 Position;
-        protected float Speed = 100;
+        public Vector2 Position;
+        public float Speed { get; set; }
+        protected RectangleF Hitbox;
         protected Dungeon Dungeon { get; }
 
         public Character(Dungeon dungeon, Vector2 initialPosition)
         {
             Dungeon = dungeon;
             Position = initialPosition;
+
+        }
+        public RectangleF getHitbox()
+        {
+            return Hitbox;
         }
 
-        public bool Collide(Collidable collidable)
+        //Function used to debug hitbox
+        public void DrawHitbox(SpriteBatch spriteBatch)
         {
-            return false;
+            spriteBatch.DrawRectangle(getHitbox(), Color.Red);
         }
+
+        public bool IsCollided(RectangleF E) => Hitbox.Intersects(E);
+
+        public abstract void Update(GameTime gameTime);
+
+        public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
+
     }
 }

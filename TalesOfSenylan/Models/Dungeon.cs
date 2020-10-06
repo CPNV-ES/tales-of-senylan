@@ -1,6 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.Collisions;
 using System;
 using System.Collections.Generic;
 using TalesOfSenylan.Models.Characters;
@@ -15,6 +18,7 @@ namespace TalesOfSenylan
         private Vector2 StartPosition;
 
         private int DungeonNumber;
+        private KeyboardState KeyboardState;
 
         public ContentManager Content { get; }
 
@@ -41,6 +45,7 @@ namespace TalesOfSenylan
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             Player.Draw(gameTime, spriteBatch);
+
             foreach (Enemy enemy in Enemies)
             {
                 enemy.Draw(gameTime, spriteBatch);
@@ -49,11 +54,43 @@ namespace TalesOfSenylan
 
         public void Update(GameTime gameTime)
         {
+            KeyboardState = Keyboard.GetState();
+
+            foreach(Enemy enemy in Enemies)
+			{
+                if (Player.IsCollided(enemy.getHitbox()) && (KeyboardState.IsKeyDown(Keys.Space) || KeyboardState.IsKeyDown(Keys.K)))
+                    HandleAttack(gameTime);
+            }
+            
+            HandleMovement(gameTime);
             Player.Update(gameTime);
+
             foreach (Enemy enemy in Enemies)
             {
                 enemy.Update(gameTime);
             }
+        }
+
+        //Player Movement Handling
+        public void HandleMovement(GameTime gameTime)
+        {
+            if (KeyboardState.IsKeyDown(Keys.Up) || KeyboardState.IsKeyDown(Keys.W))
+                Player.Position.Y -= Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (KeyboardState.IsKeyDown(Keys.Down) || KeyboardState.IsKeyDown(Keys.S))
+                Player.Position.Y += Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (KeyboardState.IsKeyDown(Keys.Left) || KeyboardState.IsKeyDown(Keys.A))
+                Player.Position.X -= Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (KeyboardState.IsKeyDown(Keys.Right) || KeyboardState.IsKeyDown(Keys.D))
+                Player.Position.X += Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        //Player Attack Handling
+        public void HandleAttack(GameTime gameTime)
+        { 
+            Player.DoDamage(gameTime);
         }
 
         public static Vector2 GenerateRandomStartingPosition()
