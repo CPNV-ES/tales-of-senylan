@@ -3,11 +3,14 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using System;
 using System.Diagnostics;
+using TalesOfSenylan.Models.Dungeon;
 
 namespace TalesOfSenylan.Models.Characters
 {
     public class Enemy : Character
     {
+        private Room Room;
+
         private float MovementDuration;
         private TimeSpan CurrentMovementDuration;
         
@@ -18,8 +21,9 @@ namespace TalesOfSenylan.Models.Characters
 
         private TimeSpan LastDirectionChangeTime;
 
-        public Enemy(Dungeon dungeon, Vector2 position) : base(dungeon, position)
+        public Enemy(Vector2 position, Room room) : base(position)
         {
+            Room = room;
             MovementDuration = Utilities.Utilities.getRandomNumber(1, 3);
             CurrentMovementDuration = new TimeSpan();
             MaxHealth = Health = 200;
@@ -30,7 +34,7 @@ namespace TalesOfSenylan.Models.Characters
 
         public void LoadContent()
         {
-            Sprite = Dungeon.Content.Load<Texture2D>("orc");
+            Sprite = Room.ContentManager.Load<Texture2D>("orc");
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
