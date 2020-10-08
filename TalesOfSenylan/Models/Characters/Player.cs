@@ -18,7 +18,7 @@ namespace TalesOfSenylan
     }
     public class Player : Character
     {
-        private int c = 1;
+        private int c = 1; //Debug counter of the attack
         private TimeSpan attackRate = new TimeSpan(0, 0, 1); //cooldown attack set to 1sec
         private TimeSpan nextAttack = new TimeSpan();
 
@@ -26,6 +26,8 @@ namespace TalesOfSenylan
         {
             LoadContent();
             Speed = 200;
+            MaxHealth = Health = 300;
+            MaxMana = Mana = 200;
             Hitbox = new RectangleF(Position.X - Sprite.Width / 2, Position.Y - Sprite.Height / 2, Sprite.Width, Sprite.Height);
         }
 
@@ -58,13 +60,20 @@ namespace TalesOfSenylan
             setHitbox(Position.X, Position.Y);
         }
 
-        public void DoDamage(GameTime gameTime)
+        public int GetDamagePoints(GameTime gameTime)
         {
+            int dmgValue = 50;
             if (gameTime.TotalGameTime.TotalSeconds.CompareTo(nextAttack.TotalSeconds) == 1)
 			{
-                Debug.WriteLine("ATTAQUE :" + c++ + " fois");
+                //Debug.WriteLine("ATTAQUE :" + c++ + " fois");
                 nextAttack = gameTime.TotalGameTime.Add(attackRate);
-            }            
+
+                return dmgValue;
+			}
+			else
+			{
+                return 0;
+			}
         }
     }
 }

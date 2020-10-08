@@ -22,6 +22,7 @@ namespace TalesOfSenylan.Models.Characters
         {
             MovementDuration = Utilities.Utilities.getRandomNumber(1, 3);
             CurrentMovementDuration = new TimeSpan();
+            MaxHealth = Health = 200;
             Speed = 100;
             LoadContent();
             Hitbox = new RectangleF(Position.X - Sprite.Width / 2, Position.Y - Sprite.Height / 2, Sprite.Width, Sprite.Height);

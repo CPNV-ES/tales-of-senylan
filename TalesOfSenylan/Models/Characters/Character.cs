@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using System;
@@ -12,6 +13,10 @@ namespace TalesOfSenylan.Models.Characters
     {
         protected Texture2D Sprite;
         public Vector2 Position;
+        public int MaxHealth { get; set; }
+        public int Health { get; set; }
+		public int MaxMana { get; set; }
+        public int Mana { get; set; }
         public float Speed { get; set; }
         protected RectangleF Hitbox;
         protected Dungeon Dungeon { get; }
@@ -20,7 +25,6 @@ namespace TalesOfSenylan.Models.Characters
         {
             Dungeon = dungeon;
             Position = initialPosition;
-
         }
         public RectangleF getHitbox()
         {

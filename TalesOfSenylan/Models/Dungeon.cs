@@ -6,6 +6,8 @@ using MonoGame.Extended;
 using MonoGame.Extended.Collisions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using TalesOfSenylan.Models.Characters;
 using TalesOfSenylan.Models.Utilities;
 
@@ -55,18 +57,23 @@ namespace TalesOfSenylan
         public void Update(GameTime gameTime)
         {
             KeyboardState = Keyboard.GetState();
-
-            foreach(Enemy enemy in Enemies)
-			{
-                if (Player.IsCollided(enemy.getHitbox()) && (KeyboardState.IsKeyDown(Keys.Space) || KeyboardState.IsKeyDown(Keys.K)))
-                    HandleAttack(gameTime);
-            }
             
             HandleMovement(gameTime);
             Player.Update(gameTime);
+            Debug.WriteLine("Le joueur a: " + Player.Health + " Points de vie");
 
-            foreach (Enemy enemy in Enemies)
+            //ToList() to make a copy of the list and remove an item safely from the original list
+            foreach (Enemy enemy in Enemies.ToList())
             {
+                if (Player.IsCollided(enemy.getHitbox()) && (KeyboardState.IsKeyDown(Keys.Space) || KeyboardState.IsKeyDown(Keys.K)))
+                {
+                    enemy.Health -= HandleAttack(gameTime);
+
+                    if (enemy.Health <= 0)
+                    {
+                        Enemies.Remove(enemy);
+                    }
+                }
                 enemy.Update(gameTime);
             }
         }
@@ -88,9 +95,9 @@ namespace TalesOfSenylan
         }
 
         //Player Attack Handling
-        public void HandleAttack(GameTime gameTime)
+        public int HandleAttack(GameTime gameTime)
         { 
-            Player.DoDamage(gameTime);
+            return Player.GetDamagePoints(gameTime);
         }
 
         public static Vector2 GenerateRandomStartingPosition()
