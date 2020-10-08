@@ -56,7 +56,7 @@ namespace TalesOfSenylan
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            SpriteBatch.Begin();
+            SpriteBatch.Begin(SpriteSortMode.BackToFront);
             Dungeon.Draw(gameTime, SpriteBatch);
             SpriteBatch.End();
 

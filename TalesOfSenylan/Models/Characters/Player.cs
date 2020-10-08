@@ -2,64 +2,69 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TalesOfSenylan.Models.Characters;
+using MonoGame.Extended;
+using System;
+using System.Diagnostics;
+using MonoGame.Extended.Sprites;
+using MonoGame.Extended.Collisions;
 
 namespace TalesOfSenylan
 {
-
+    public enum State
+    {
+        Idle,
+        Attacking,
+        Walking
+    }
     public class Player : Character
     {
-        private KeyboardState KeyboardState;
+        private int c = 1;
+        private TimeSpan attackRate = new TimeSpan(0, 0, 1); //cooldown attack set to 1sec
+        private TimeSpan nextAttack = new TimeSpan();
 
-        public Player(Dungeon dungeon, Vector2 initialPosition) : base(dungeon, initialPosition)
+		public Player(Dungeon dungeon, Vector2 initialPosition) : base(dungeon, initialPosition)
         {
             LoadContent();
+            Speed = 200;
+            Hitbox = new RectangleF(Position.X - Sprite.Width / 2, Position.Y - Sprite.Height / 2, Sprite.Width, Sprite.Height);
         }
 
-        public void LoadContent()
+		private State state { get; set; }
+
+		public void LoadContent()
         {
             Sprite = Dungeon.Content.Load<Texture2D>("ball");
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
                 Sprite,
-                Position,
+				Position,
                 null,
                 Color.White,
                 0f,
                 new Vector2(Sprite.Width / 2, Sprite.Height / 2),
                 Vector2.One,
                 SpriteEffects.None,
-                0f
+                0.0f
             );
+
+            //DrawHitbox(spriteBatch);
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
-            HandleInput(gameTime);
-        }
-        
-        private void HandleInput(GameTime gameTime)
-        {
-            KeyboardState = Keyboard.GetState();
-
-            if (KeyboardState.IsKeyDown(Keys.Up) || KeyboardState.IsKeyDown(Keys.W))
-                Position.Y -= Speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (KeyboardState.IsKeyDown(Keys.Down) || KeyboardState.IsKeyDown(Keys.S))
-                Position.Y += Speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (KeyboardState.IsKeyDown(Keys.Left) || KeyboardState.IsKeyDown(Keys.A))
-                Position.X -= Speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (KeyboardState.IsKeyDown(Keys.Right) || KeyboardState.IsKeyDown(Keys.D))
-                Position.X += Speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
+            setHitbox(Position.X, Position.Y);
         }
 
-        public new bool Collide(Collidable collidable)
+        public void DoDamage(GameTime gameTime)
         {
-            return true;
+            if (gameTime.TotalGameTime.TotalSeconds.CompareTo(nextAttack.TotalSeconds) == 1)
+			{
+                Debug.WriteLine("ATTAQUE :" + c++ + " fois");
+                nextAttack = gameTime.TotalGameTime.Add(attackRate);
+            }            
         }
     }
 }
