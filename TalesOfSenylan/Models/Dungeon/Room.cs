@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using TalesOfSenylan.Models.Characters;
+using TalesOfSenylan.Models.Utilities;
 
 namespace TalesOfSenylan.Models.Dungeon
 {
@@ -25,7 +26,7 @@ namespace TalesOfSenylan.Models.Dungeon
             Enemies = new List<Enemy>();
             ContentManager = contentManager;
 
-            for (int i = 0; i < dungeonNumber * 5; i++)
+            for (int i = 0; i < DungeonUtilities.GetNumberOfEnemies(dungeonNumber); i++)
             {
                 Enemies.Add(new Enemy(GenerateRandomStartingPosition(), this));
             }
