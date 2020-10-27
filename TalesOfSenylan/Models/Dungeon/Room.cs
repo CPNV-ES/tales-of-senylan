@@ -14,42 +14,42 @@ namespace TalesOfSenylan.Models.Dungeon
 {
     public class Room
     {
-        private Player Player { get; set; }
-        public List<Enemy> Enemies { get; set; }
+        private Player player { get; set; }
+        public List<Enemy> enemies { get; set; }
 
-        private KeyboardState KeyboardState;
-        public ContentManager ContentManager { get; }
+        private KeyboardState keyboardState;
+        public ContentManager contentManager { get; }
 
         public Room(int dungeonNumber, Player player, ContentManager contentManager)
         {
-            Player = player;
-            Enemies = new List<Enemy>();
-            ContentManager = contentManager;
+            this.player = player;
+            enemies = new List<Enemy>();
+            this.contentManager = contentManager;
 
             for (int i = 0; i < DungeonUtilities.GetNumberOfEnemies(dungeonNumber); i++)
             {
-                Enemies.Add(new Enemy(GenerateRandomStartingPosition(), this));
+                enemies.Add(new Enemy(GenerateRandomStartingPosition(), this));
             }
         }
 
         public void Update(GameTime gameTime)
         {
-            KeyboardState = Keyboard.GetState();
+            keyboardState = Keyboard.GetState();
 
             HandleMovement(gameTime);
-            Player.Update(gameTime);
-            Debug.WriteLine("Le joueur a: " + Player.Health + " Points de vie");
+            player.Update(gameTime);
+            Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
 
             //ToList() to make a copy of the list and remove an item safely from the original list
-            foreach (Enemy enemy in Enemies.ToList())
+            foreach (Enemy enemy in enemies.ToList())
             {
-                if (Player.IsCollided(enemy.getHitbox()) && (KeyboardState.IsKeyDown(Keys.Space) || KeyboardState.IsKeyDown(Keys.K)))
+                if (player.IsCollided(enemy.GetHitbox()) && (keyboardState.IsKeyDown(Keys.Space) || keyboardState.IsKeyDown(Keys.K)))
                 {
-                    enemy.Health -= HandleAttack(gameTime);
+                    enemy.health -= HandleAttack(gameTime);
 
-                    if (enemy.Health <= 0)
+                    if (enemy.health <= 0)
                     {
-                        Enemies.Remove(enemy);
+                        enemies.Remove(enemy);
                     }
                 }
                 enemy.Update(gameTime);
@@ -58,9 +58,9 @@ namespace TalesOfSenylan.Models.Dungeon
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Player.Draw(gameTime, spriteBatch);
+            player.Draw(gameTime, spriteBatch);
 
-            foreach (Enemy enemy in Enemies)
+            foreach (Enemy enemy in enemies)
             {
                 enemy.Draw(gameTime, spriteBatch);
             }
@@ -69,32 +69,32 @@ namespace TalesOfSenylan.Models.Dungeon
         private static Vector2 GenerateRandomStartingPosition()
         {
             // Todo: position shouldn't be between 20 and 200 => make it respect dungeon bounds.
-            int x = Utilities.Utilities.getRandomNumber(20, 200);
-            int y = Utilities.Utilities.getRandomNumber(20, 200);
+            int x = Utilities.Utilities.GetRandomNumber(20, 200);
+            int y = Utilities.Utilities.GetRandomNumber(20, 200);
 
             return new Vector2(x, y);
         }
 
-        //Player Attack Handling
+        //player Attack Handling
         private int HandleAttack(GameTime gameTime)
         {
-            return Player.GetDamagePoints(gameTime);
+            return player.GetDamagePoints(gameTime);
         }
 
-        //Player Movement Handling
+        //player Movement Handling
         private void HandleMovement(GameTime gameTime)
         {
-            if (KeyboardState.IsKeyDown(Keys.Up) || KeyboardState.IsKeyDown(Keys.W))
-                Player.Position.Y -= Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
+                player.position.Y -= player.speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (KeyboardState.IsKeyDown(Keys.Down) || KeyboardState.IsKeyDown(Keys.S))
-                Player.Position.Y += Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S))
+                player.position.Y += player.speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (KeyboardState.IsKeyDown(Keys.Left) || KeyboardState.IsKeyDown(Keys.A))
-                Player.Position.X -= Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
+                player.position.X -= player.speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (KeyboardState.IsKeyDown(Keys.Right) || KeyboardState.IsKeyDown(Keys.D))
-                Player.Position.X += Player.Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
+                player.position.X += player.speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 }

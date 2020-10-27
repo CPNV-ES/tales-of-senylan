@@ -11,45 +11,45 @@ namespace TalesOfSenylan.Models.Characters
 {
     public abstract class Character
     {
-        protected Texture2D Sprite;
-        public Vector2 Position;
-        public int MaxHealth { get; set; }
-        public int Health { get; set; }
-		public int MaxMana { get; set; }
-        public int Mana { get; set; }
-        public float Speed { get; set; }
-        protected RectangleF Hitbox;
-        protected Dungeon.Dungeon Dungeon { get; }
+        protected Texture2D sprite;
+        public Vector2 position;
+        public int maxHealth { get; set; }
+        public int health { get; set; }
+		public int maxMana { get; set; }
+        public int mana { get; set; }
+        public float speed { get; set; }
+        protected RectangleF hitbox;
+        protected Dungeon.Dungeon dungeon { get; }
 
         public Character(Dungeon.Dungeon dungeon, Vector2 initialPosition)
         {
-            Dungeon = dungeon;
-            Position = initialPosition;
+            this.dungeon = dungeon;
+            position = initialPosition;
         }
 
         public Character(Vector2 initialPosition)
         {
-            Position = initialPosition;
+            position = initialPosition;
         }
 
-        public RectangleF getHitbox()
+        public RectangleF GetHitbox()
         {
-            return Hitbox;
+            return hitbox;
         }
 
-        public void setHitbox(float x, float y)
+        public void SetHitbox(float x, float y)
 		{
-            Hitbox.X = x - Sprite.Width / 2;
-            Hitbox.Y = y - Sprite.Height / 2;
+            hitbox.X = x - sprite.Width / 2;
+            hitbox.Y = y - sprite.Height / 2;
 		}
 
         //Function used to debug hitbox
         public void DrawHitbox(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawRectangle(getHitbox(), Color.Red);
+            spriteBatch.DrawRectangle(GetHitbox(), Color.Red);
         }
 
-        public bool IsCollided(RectangleF E) => Hitbox.Intersects(E);
+        public bool IsCollided(RectangleF E) => hitbox.Intersects(E);
 
         public abstract void Update(GameTime gameTime);
 

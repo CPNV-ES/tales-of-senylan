@@ -9,43 +9,43 @@ namespace TalesOfSenylan.Models.Characters
 {
     public class Enemy : Character
     {
-        private Room Room;
+        private Room room;
 
-        private float MovementDuration;
-        private TimeSpan CurrentMovementDuration;
+        private float movementDuration;
+        private TimeSpan currentMovementDuration;
         
-        private bool HasMovedLeft = false;
-        private bool HasMovedRight = false;
-        private bool HasMovedTop = false;
-        private bool HasMovedBottom = false;
+        private bool hasMovedLeft = false;
+        private bool hasMovedRight = false;
+        private bool hasMovedTop = false;
+        private bool hasMovedBottom = false;
 
-        private TimeSpan LastDirectionChangeTime;
+        private TimeSpan lastDirectionChangeTime;
 
         public Enemy(Vector2 position, Room room) : base(position)
         {
-            Room = room;
-            MovementDuration = Utilities.Utilities.getRandomNumber(1, 3);
-            CurrentMovementDuration = new TimeSpan();
-            MaxHealth = Health = 200;
-            Speed = 100;
+            this.room = room;
+            movementDuration = Utilities.Utilities.GetRandomNumber(1, 3);
+            currentMovementDuration = new TimeSpan();
+            maxHealth = health = 200;
+            speed = 100;
             LoadContent();
-            Hitbox = new RectangleF(Position.X - Sprite.Width / 2, Position.Y - Sprite.Height / 2, Sprite.Width, Sprite.Height);
+            hitbox = new RectangleF(base.position.X - sprite.Width / 2, base.position.Y - sprite.Height / 2, sprite.Width, sprite.Height);
         }
 
         public void LoadContent()
         {
-            Sprite = Room.ContentManager.Load<Texture2D>("orc");
+            sprite = room.contentManager.Load<Texture2D>("orc");
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
-                Sprite,
-                Position,
+                sprite,
+                position,
                 null,
                 Color.White,
                 0f,
-                new Vector2(Sprite.Width / 2, Sprite.Height / 2),
+                new Vector2(sprite.Width / 2, sprite.Height / 2),
                 Vector2.One,
                 SpriteEffects.None,
                 0.1f
@@ -56,60 +56,60 @@ namespace TalesOfSenylan.Models.Characters
 
         public override void Update(GameTime gameTime)
         {
-            CurrentMovementDuration = CurrentMovementDuration.Add(gameTime.ElapsedGameTime);
+            currentMovementDuration = currentMovementDuration.Add(gameTime.ElapsedGameTime);
             
-            if (!HasMovedRight)
+            if (!hasMovedRight)
             {
-                Position.X += Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (ShouldChangeDirection(gameTime))
                 {
-                    HasMovedRight = true;
-                    LastDirectionChangeTime = gameTime.TotalGameTime;
+                    hasMovedRight = true;
+                    lastDirectionChangeTime = gameTime.TotalGameTime;
                 }
-            } else if (!HasMovedBottom)
+            } else if (!hasMovedBottom)
             {
-                Position.Y += Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (ShouldChangeDirection(gameTime))
                 {
-                    HasMovedBottom = true;
-                    LastDirectionChangeTime = gameTime.TotalGameTime;
+                    hasMovedBottom = true;
+                    lastDirectionChangeTime = gameTime.TotalGameTime;
                 }
-            } else if (!HasMovedLeft)
+            } else if (!hasMovedLeft)
             {
-                Position.X -= Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (ShouldChangeDirection(gameTime))
                 {
-                    HasMovedLeft = true;
-                    LastDirectionChangeTime = gameTime.TotalGameTime;
+                    hasMovedLeft = true;
+                    lastDirectionChangeTime = gameTime.TotalGameTime;
                 }
-            } else if (!HasMovedTop)
+            } else if (!hasMovedTop)
             {
-                Position.Y -= Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (ShouldChangeDirection(gameTime))
                 {
-                    HasMovedTop = true;
-                    LastDirectionChangeTime = gameTime.TotalGameTime;
+                    hasMovedTop = true;
+                    lastDirectionChangeTime = gameTime.TotalGameTime;
                 }
 
                 if (HasCompletedlap())
                 {
-                    HasMovedRight = false;
-                    HasMovedBottom = false;
-                    HasMovedLeft = false;
-                    HasMovedTop = false;
+                    hasMovedRight = false;
+                    hasMovedBottom = false;
+                    hasMovedLeft = false;
+                    hasMovedTop = false;
                 }
             }
-            setHitbox(Position.X, Position.Y);
+            SetHitbox(position.X, position.Y);
         }
 
         private bool ShouldChangeDirection(GameTime gameTime)
         {
-            return gameTime.TotalGameTime.TotalSeconds - LastDirectionChangeTime.TotalSeconds >= MovementDuration;
+            return gameTime.TotalGameTime.TotalSeconds - lastDirectionChangeTime.TotalSeconds >= movementDuration;
         }
 
         private bool HasCompletedlap()
         {
-            return HasMovedRight && HasMovedBottom && HasMovedLeft && HasMovedTop;
+            return hasMovedRight && hasMovedBottom && hasMovedLeft && hasMovedTop;
         }
     }
 }

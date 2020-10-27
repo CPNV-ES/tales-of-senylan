@@ -26,28 +26,28 @@ namespace TalesOfSenylan
 		public Player(Dungeon dungeon, Vector2 initialPosition) : base(dungeon, initialPosition)
         {
             LoadContent();
-            Speed = 200;
-            MaxHealth = Health = 300;
-            MaxMana = Mana = 200;
-            Hitbox = new RectangleF(Position.X - Sprite.Width / 2, Position.Y - Sprite.Height / 2, Sprite.Width, Sprite.Height);
+            speed = 200;
+            maxHealth = health = 300;
+            maxMana = mana = 200;
+            hitbox = new RectangleF(position.X - sprite.Width / 2, position.Y - sprite.Height / 2, sprite.Width, sprite.Height);
         }
 
 		private State state { get; set; }
 
 		public void LoadContent()
         {
-            Sprite = Dungeon.Content.Load<Texture2D>("ball");
+            sprite = dungeon.content.Load<Texture2D>("ball");
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
-                Sprite,
-				Position,
+                sprite,
+				position,
                 null,
                 Color.White,
                 0f,
-                new Vector2(Sprite.Width / 2, Sprite.Height / 2),
+                new Vector2(sprite.Width / 2, sprite.Height / 2),
                 Vector2.One,
                 SpriteEffects.None,
                 0.0f
@@ -58,7 +58,7 @@ namespace TalesOfSenylan
 
         public override void Update(GameTime gameTime)
         {
-            setHitbox(Position.X, Position.Y);
+            SetHitbox(position.X, position.Y);
         }
 
         public int GetDamagePoints(GameTime gameTime)

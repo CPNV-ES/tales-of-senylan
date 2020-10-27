@@ -15,40 +15,40 @@ namespace TalesOfSenylan.Models.Dungeon
 {
     public class Dungeon
     {
-        private Player Player { get; set; }
-        private Vector2 StartPosition;
-        public List<Room> Rooms { get; set; }
-        private Room CurrentRoom;
+        private Player player { get; set; }
+        private Vector2 startPosition;
+        public List<Room> rooms { get; set; }
+        private Room currentRoom;
 
-        private int DungeonNumber;
+        private int dungeonNumber;
 
-        public ContentManager Content { get; }
+        public ContentManager content { get; }
 
         public Dungeon(IServiceProvider serviceProvider, int dungeonNumber)
         {
-            StartPosition = new Vector2(200, 200);
-            Content = new ContentManager(serviceProvider, "Content");
-            DungeonNumber = dungeonNumber;
+            startPosition = new Vector2(200, 200);
+            content = new ContentManager(serviceProvider, "Content");
+            this.dungeonNumber = dungeonNumber;
             InitializeLevel();
         }
         
         private void InitializeLevel()
         {
-            Player = new Player(this, StartPosition);
-            Rooms = new List<Room>();
+            player = new Player(this, startPosition);
+            rooms = new List<Room>();
 
-            Rooms.Add(new Room(DungeonNumber, Player, Content));
-            CurrentRoom = Rooms[0];
+            rooms.Add(new Room(dungeonNumber, player, content));
+            currentRoom = rooms[0];
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            CurrentRoom.Draw(gameTime, spriteBatch);
+            currentRoom.Draw(gameTime, spriteBatch);
         }
 
         public void Update(GameTime gameTime)
         {
-            CurrentRoom.Update(gameTime);
+            currentRoom.Update(gameTime);
         }
     }
 }
