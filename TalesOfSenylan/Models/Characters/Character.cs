@@ -5,7 +5,7 @@ using MonoGame.Extended;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using TalesOfSenylan.Models.Dungeon;
 
 namespace TalesOfSenylan.Models.Characters
 {
@@ -19,13 +19,19 @@ namespace TalesOfSenylan.Models.Characters
         public int Mana { get; set; }
         public float Speed { get; set; }
         protected RectangleF Hitbox;
-        protected Dungeon Dungeon { get; }
+        protected Dungeon.Dungeon Dungeon { get; }
 
-        public Character(Dungeon dungeon, Vector2 initialPosition)
+        public Character(Dungeon.Dungeon dungeon, Vector2 initialPosition)
         {
             Dungeon = dungeon;
             Position = initialPosition;
         }
+
+        public Character(Vector2 initialPosition)
+        {
+            Position = initialPosition;
+        }
+
         public RectangleF getHitbox()
         {
             return Hitbox;
