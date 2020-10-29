@@ -37,7 +37,11 @@ namespace TalesOfSenylan.Models.Dungeon
             player = new Player(this, startPosition);
             rooms = new List<Room>();
 
-            rooms.Add(new Room(dungeonNumber, player, content));
+            for (int i = 0; i < DungeonUtilities.GetNumberOfRooms(dungeonNumber); i++)
+            {
+                rooms.Add(new Room(dungeonNumber, player, content));
+            }
+            
             currentRoom = rooms[0];
         }
 
