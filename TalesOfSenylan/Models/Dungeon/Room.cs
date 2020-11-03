@@ -68,9 +68,8 @@ namespace TalesOfSenylan.Models.Dungeon
 
         private static Vector2 GenerateRandomStartingPosition()
         {
-            // Todo: position shouldn't be between 20 and 200 => make it respect dungeon bounds.
-            int x = Utilities.Utilities.GetRandomNumber(20, 200);
-            int y = Utilities.Utilities.GetRandomNumber(20, 200);
+            int x = Utilities.Utilities.GetRandomNumber(20, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width);
+            int y = Utilities.Utilities.GetRandomNumber(20, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
 
             return new Vector2(x, y);
         }
