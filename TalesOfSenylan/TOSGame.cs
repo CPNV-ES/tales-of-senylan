@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TalesOfSenylan.Models.Dungeon;
@@ -23,7 +25,9 @@ namespace TalesOfSenylan
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            /*Graphics.PreferredBackBufferWidth = 1080;  // set this value to the desired width of your window
+            Graphics.PreferredBackBufferHeight = 720;   // set this value to the desired height of your window
+            Graphics.ApplyChanges();*/
             base.Initialize();
         }
 
@@ -54,7 +58,7 @@ namespace TalesOfSenylan
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Transparent);
 
             // TODO: Add your drawing code here
             SpriteBatch.Begin(SpriteSortMode.BackToFront);
