@@ -20,7 +20,7 @@ namespace TalesOfSenylan.Models.Dungeon
 
         private static Rectangle[][] tiles;
         private const int worldWidth = 50;
-        private const int worldDepth = 50;
+        private const int worldHeight = 30;
         private const int TileWidth = 16;
         private const int TileHeight = 16;
 
@@ -38,6 +38,8 @@ namespace TalesOfSenylan.Models.Dungeon
             {
                 enemies.Add(new Enemy(GenerateRandomStartingPosition(), this));
             }
+
+            GenerateRoomFloor();
         }
 
         public void Update(GameTime gameTime)
@@ -46,7 +48,9 @@ namespace TalesOfSenylan.Models.Dungeon
 
             HandleMovement(gameTime);
             player.Update(gameTime);
-            Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
+            //Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
+            WallCollision(player.GetHitbox().ToRectangle());
+            
 
             //ToList() to make a copy of the list and remove an item safely from the original list
             foreach (Enemy enemy in enemies.ToList())
@@ -73,7 +77,7 @@ namespace TalesOfSenylan.Models.Dungeon
                 enemy.Draw(gameTime, spriteBatch);
             }
 
-            GenerateRoomFloor(spriteBatch);
+            DrawRoomFloor(spriteBatch);
         }
 
         private static Vector2 GenerateRandomStartingPosition()
@@ -107,24 +111,27 @@ namespace TalesOfSenylan.Models.Dungeon
                 player.position.X += player.speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
-        private void GenerateRoomFloor(SpriteBatch sp)
+
+        private void GenerateRoomFloor()
         {
             tiles = new Rectangle[worldWidth][];
-            for (int l = 0; l < worldWidth; l++)
-            {
-                tiles[l] = new Rectangle[worldDepth];
-            }
 
+            //Setting tiles with Rectangle
             for (int i = 0; i < worldWidth; i++)
             {
-                for (int k = 0; k < worldDepth; k++)
+                tiles[i] = new Rectangle[worldHeight];
+                for (int k = 0; k < worldHeight; k++)
                 {
                     tiles[i][k] = new Rectangle(i * TileWidth, k * TileHeight, TileWidth, TileHeight);
                 }
             }
-
+        }
+        private void DrawRoomFloor(SpriteBatch sp)
+        {
+            //Draw sprites to Rectangle. Checking if it's a wall or the floor.
             for (int i = 0; i < tiles.Length; i++)
-                for (int j = 0; j < tiles.Length; j++)
+            {
+                for (int j = 0; j < tiles[0].Length; j++)
                 {
                     if (j == 0)
                     {
@@ -132,7 +139,7 @@ namespace TalesOfSenylan.Models.Dungeon
                         {
                             sp.Draw(contentManager.Load<Texture2D>("Tiles/tile01"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         }
-                        else if (i == tiles.Length-1)
+                        else if (i == tiles.Length - 1)
                         {
                             sp.Draw(contentManager.Load<Texture2D>("Tiles/tile03"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         }
@@ -143,7 +150,7 @@ namespace TalesOfSenylan.Models.Dungeon
                     }
                     else if (i == 0)
                     {
-                        if (j == tiles.Length - 1)
+                        if (j == tiles[0].Length - 1)
                         {
                             sp.Draw(contentManager.Load<Texture2D>("Tiles/tileBL"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         }
@@ -152,9 +159,9 @@ namespace TalesOfSenylan.Models.Dungeon
                             sp.Draw(contentManager.Load<Texture2D>("Tiles/tile04"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         }
                     }
-                    else if(i == tiles.Length - 1)
+                    else if (i == tiles.Length - 1)
                     {
-                        if (j == tiles.Length - 1)
+                        if (j == tiles[0].Length - 1)
                         {
                             sp.Draw(contentManager.Load<Texture2D>("Tiles/tileBR"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         }
@@ -163,7 +170,7 @@ namespace TalesOfSenylan.Models.Dungeon
                             sp.Draw(contentManager.Load<Texture2D>("Tiles/tile05"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         }
                     }
-                    else if(j == tiles.Length - 1)
+                    else if (j == tiles[0].Length - 1)
                     {
                         sp.Draw(contentManager.Load<Texture2D>("Tiles/tile06"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
 
@@ -174,6 +181,33 @@ namespace TalesOfSenylan.Models.Dungeon
                         sp.Draw(contentManager.Load<Texture2D>("Tiles/tile07"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                     }
                 }
+            }
         }
+
+        private void WallCollision(Rectangle _player)
+        {
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                for (int j = 0; j < tiles[0].Length; j++)
+                {
+                    if(i == 0 || i == tiles[0].Length -1 || j == 0 || j == tiles[0].Length - 1) {
+                        if (tiles[i][j].Intersects(_player))
+                        {
+                            if (player.GetHitbox().ToRectangle().Top <= 0) { player.position.Y -= tiles[i][j].Y; }
+                            if (player.GetHitbox().ToRectangle().Bottom >= 800) { player.position.Y += tiles[i][j].Y + tiles[i][j].Height; }
+                            //Debug.WriteLine("INTERSECT");
+                        }
+                        
+                        
+                        /*if (tiles[i][j].Left < _player.Right && tiles[i][j].Right > _player.Left && tiles[i][j].Top < _player.Bottom && tiles[i][j].Bottom > _player.Top)
+                        {
+                            if (player.GetHitbox().ToRectangle().Top <= 0) { player.position.X += tiles[i][j].X + tiles[i][j].Width; }
+                            if (player.GetHitbox().ToRectangle().Bottom >= 800) { player.position.Y += tiles[i][j].Y + tiles[i][j].Height; }
+                        }*/
+                    }
+                }
+            }
+        }
+
     }
 }
