@@ -81,7 +81,6 @@ namespace TalesOfSenylan.Models.Dungeon
             }
             room.visited = true;
             
-            // Puis on regarde quelles sont les roomules voisines possibles et non visitées. 
             List<Room> adjacentUnvisitedRooms = GetAdjacentUnvisitedRooms(room);
             if (adjacentUnvisitedRooms.Count > 0)
             {
@@ -98,12 +97,10 @@ namespace TalesOfSenylan.Models.Dungeon
                 
                 VisitRoom(selectedExit);
             }
-            // Lorsque l'on est revenu à la case de départ et qu'il n'y a plus de possibilités, le labyrinthe est terminé. 
             else if (lastRooms.Count > 0 && startingRoom.Equals(lastRooms.Peek()))
             {
                 return;
             }
-            // S'il n'y en pas, on revient à la case précédente et on recommence.
             else
             {
                 if (lastRooms.Count > 0)
