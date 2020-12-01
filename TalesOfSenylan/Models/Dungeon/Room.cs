@@ -20,8 +20,15 @@ namespace TalesOfSenylan.Models.Dungeon
         private KeyboardState keyboardState;
         public ContentManager contentManager { get; }
 
-        public Room(int dungeonNumber, Player player, ContentManager contentManager)
+        #region Only used by the maze generation algorithm
+        public bool visited { get; set; }
+        public Dictionary<CardinalPoint, Room> exits { get; set; } = new Dictionary<CardinalPoint, Room>();
+        public Vector2 position { get; }
+        #endregion
+
+        public Room(Vector2 position, int dungeonNumber, Player player, ContentManager contentManager)
         {
+            this.position = position;
             this.player = player;
             enemies = new List<Enemy>();
             this.contentManager = contentManager;
