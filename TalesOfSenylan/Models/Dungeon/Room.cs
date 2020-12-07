@@ -47,9 +47,9 @@ namespace TalesOfSenylan.Models.Dungeon
             keyboardState = Keyboard.GetState();
 
             HandleMovement(gameTime);
+            WallCollision(player.GetHitbox().ToRectangle());
             player.Update(gameTime);
             //Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
-            WallCollision(player.GetHitbox().ToRectangle());
             
 
             //ToList() to make a copy of the list and remove an item safely from the original list
@@ -145,6 +145,7 @@ namespace TalesOfSenylan.Models.Dungeon
                         }
                         else
                         {
+                            //sp.DrawRectangle(new RectangleF(tiles[i][j].X, tiles[i][j].Y, tiles[i][j].Width, tiles[i][j].Height), Color.Red);
                             sp.Draw(contentManager.Load<Texture2D>("Tiles/tile02"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         }
                     }
@@ -190,20 +191,33 @@ namespace TalesOfSenylan.Models.Dungeon
             {
                 for (int j = 0; j < tiles[0].Length; j++)
                 {
-                    if(i == 0 || i == tiles[0].Length -1 || j == 0 || j == tiles[0].Length - 1) {
+                    if (i == 0)
+                    {
                         if (tiles[i][j].Intersects(_player))
                         {
-                            if (player.GetHitbox().ToRectangle().Top <= 0) { player.position.Y -= tiles[i][j].Y; }
-                            if (player.GetHitbox().ToRectangle().Bottom >= 800) { player.position.Y += tiles[i][j].Y + tiles[i][j].Height; }
-                            //Debug.WriteLine("INTERSECT");
+                            player.position.X += 1f;
                         }
-                        
-                        
-                        /*if (tiles[i][j].Left < _player.Right && tiles[i][j].Right > _player.Left && tiles[i][j].Top < _player.Bottom && tiles[i][j].Bottom > _player.Top)
+                    }
+                    else if (i == tiles.Length - 1)
+                    {
+                        if (tiles[i][j].Intersects(_player))
                         {
-                            if (player.GetHitbox().ToRectangle().Top <= 0) { player.position.X += tiles[i][j].X + tiles[i][j].Width; }
-                            if (player.GetHitbox().ToRectangle().Bottom >= 800) { player.position.Y += tiles[i][j].Y + tiles[i][j].Height; }
-                        }*/
+                            player.position.X -= 1f;
+                        }
+                    }
+                    else if (j == 0)
+                    {
+                        if (tiles[i][j].Intersects(_player))
+                        {
+                            player.position.Y += 1f;
+                        }
+                    }
+                    else if (j == tiles[0].Length - 1)
+                    {
+                        if (tiles[i][j].Intersects(_player))
+                        {
+                            player.position.Y -= 1f;
+                        }
                     }
                 }
             }
