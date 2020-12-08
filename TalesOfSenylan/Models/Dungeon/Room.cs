@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -46,8 +47,9 @@ namespace TalesOfSenylan.Models.Dungeon
             HandleMovement(gameTime);
             WallCollision(player.GetHitbox().ToRectangle());
             player.Update(gameTime);
-            //Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
 
+            // Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
+            CheckRoomChange();
 
             //ToList() to make a copy of the list and remove an item safely from the original list
             foreach (var enemy in enemies.ToList())
@@ -73,6 +75,23 @@ namespace TalesOfSenylan.Models.Dungeon
             DrawRoomFloor(spriteBatch);
         }
 
+        private void CheckRoomChange()
+        {
+            if (player.position.X <= 0)
+            {
+                Debug.WriteLine("Took west exit");
+            } else if (player.position.X >= Constants.GameWidth)
+            {
+                Debug.WriteLine("Took east exit");
+            } else if (player.position.Y <= 0)
+            {
+                Debug.WriteLine("Took north exit");
+            } else if (player.position.Y >= Constants.GameHeight)
+            {
+                Debug.WriteLine("Took south exit");
+            }
+        }
+        
         private static Vector2 GenerateRandomStartingPosition()
         {
             var x = Utilities.Utilities.GetRandomNumber(20, Constants.GameWidth);
