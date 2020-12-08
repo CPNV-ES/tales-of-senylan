@@ -63,7 +63,7 @@ namespace TalesOfSenylan.Models.Dungeon
 
                     if (enemy.health <= 0) enemies.Remove(enemy);
                 }
-
+                WallCollisionEnemy(enemy);
                 enemy.Update(gameTime);
             }
         }
@@ -209,6 +209,22 @@ namespace TalesOfSenylan.Models.Dungeon
                         player.position.Y += 1f;
                     else if (j == tiles[0].Length - 1) player.position.Y -= 1f;
                 }
+        }
+
+        private void WallCollisionEnemy(Enemy enemy)
+        {
+            for (var i = 0; i < tiles.Length; i++)
+                for (var j = 0; j < tiles[0].Length; j++)
+                    if (tiles[i][j].Intersects(enemy.GetHitbox().ToRectangle()))
+                    {
+                        if (i == 0)
+                            enemy.position.X += 1f;
+                        else if (i == tiles.Length - 1)
+                            enemy.position.X -= 1f;
+                        else if (j == 0)
+                            enemy.position.Y += 1f;
+                        else if (j == tiles[0].Length - 1) enemy.position.Y -= 1f;
+                    }
         }
 
         #region Only used by the maze generation algorithm
