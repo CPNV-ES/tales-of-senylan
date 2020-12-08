@@ -23,14 +23,15 @@ namespace TalesOfSenylan.Models.Dungeon
 
         private KeyboardState keyboardState;
 
-        public Room(Vector2 position, int dungeonNumber, Player player, ContentManager contentManager)
+        public Room(Vector2 position, Dungeon dungeon, Player player, ContentManager contentManager)
         {
             this.position = position;
             this.player = player;
+            this.dungeon = dungeon;
             enemies = new List<Enemy>();
             this.contentManager = contentManager;
 
-            for (var i = 0; i < DungeonUtilities.GetNumberOfEnemies(dungeonNumber); i++)
+            for (var i = 0; i < DungeonUtilities.GetNumberOfEnemies(dungeon.dungeonNumber); i++)
                 enemies.Add(new Enemy(GenerateRandomStartingPosition(), this));
 
             GenerateRoomFloor();
@@ -39,6 +40,7 @@ namespace TalesOfSenylan.Models.Dungeon
         private Player player { get; }
         public List<Enemy> enemies { get; set; }
         public ContentManager contentManager { get; }
+        private Dungeon dungeon;
 
         public void Update(GameTime gameTime)
         {
