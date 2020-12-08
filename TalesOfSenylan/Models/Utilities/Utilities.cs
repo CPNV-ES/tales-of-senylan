@@ -6,7 +6,7 @@ namespace TalesOfSenylan.Models.Utilities
     {
         public static int GetRandomNumber(int from, int to)
         {
-            Random r = new Random();
+            Random r = new Random(Guid.NewGuid().GetHashCode());
             return r.Next(from, to);
         }
     }

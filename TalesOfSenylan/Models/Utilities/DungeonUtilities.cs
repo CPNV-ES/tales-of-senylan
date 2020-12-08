@@ -10,5 +10,10 @@ namespace TalesOfSenylan.Models.Utilities
         {
             return dungeonNumber * 5;
         }
+
+        public static int GetNumberOfRooms(int dungeonNumber)
+        {
+            return dungeonNumber * 3;
+        }
     }
 }

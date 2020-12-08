@@ -42,7 +42,7 @@ namespace TalesOfSenylan
         private void LoadNextLevel()
         {
             DungeonNumber++;
-            Dungeon = new Dungeon(Services, DungeonNumber);
+            Dungeon = new Dungeon(Services, DungeonNumber, 3, 3); // TODO: for now it's 3-3 arbitrarily
         }
 
         protected override void Update(GameTime gameTime)

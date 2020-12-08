@@ -28,8 +28,15 @@ namespace TalesOfSenylan.Models.Dungeon
         private KeyboardState keyboardState;
         public ContentManager contentManager { get; }
 
-        public Room(int dungeonNumber, Player player, ContentManager contentManager)
+        #region Only used by the maze generation algorithm
+        public bool visited { get; set; }
+        public Dictionary<CardinalPoint, Room> exits { get; set; } = new Dictionary<CardinalPoint, Room>();
+        public Vector2 position { get; }
+        #endregion
+
+        public Room(Vector2 position, int dungeonNumber, Player player, ContentManager contentManager)
         {
+            this.position = position;
             this.player = player;
             enemies = new List<Enemy>();
             this.contentManager = contentManager;
@@ -82,9 +89,8 @@ namespace TalesOfSenylan.Models.Dungeon
 
         private static Vector2 GenerateRandomStartingPosition()
         {
-            // Todo: position shouldn't be between 20 and 200 => make it respect dungeon bounds.
-            int x = Utilities.Utilities.GetRandomNumber(20, 200);
-            int y = Utilities.Utilities.GetRandomNumber(20, 200);
+            int x = Utilities.Utilities.GetRandomNumber(20, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width);
+            int y = Utilities.Utilities.GetRandomNumber(20, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
 
             return new Vector2(x, y);
         }
