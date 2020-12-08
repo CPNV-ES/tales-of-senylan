@@ -1,25 +1,24 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using System;
-using System.Diagnostics;
 using TalesOfSenylan.Models.Dungeon;
 
 namespace TalesOfSenylan.Models.Characters
 {
     public class Enemy : Character
     {
-        private Room room;
-
-        private float movementDuration;
         private TimeSpan currentMovementDuration;
-        
-        private bool hasMovedLeft = false;
-        private bool hasMovedRight = false;
-        private bool hasMovedTop = false;
-        private bool hasMovedBottom = false;
+        private bool hasMovedBottom;
+
+        private bool hasMovedLeft;
+        private bool hasMovedRight;
+        private bool hasMovedTop;
 
         private TimeSpan lastDirectionChangeTime;
+
+        private readonly float movementDuration;
+        private readonly Room room;
 
         public Enemy(Vector2 position, Room room) : base(position)
         {
@@ -29,7 +28,8 @@ namespace TalesOfSenylan.Models.Characters
             maxHealth = health = 200;
             speed = 100;
             LoadContent();
-            hitbox = new RectangleF(base.position.X - sprite.Width / 2, base.position.Y - sprite.Height / 2, sprite.Width, sprite.Height);
+            hitbox = new RectangleF(this.position.X - sprite.Width / 2, this.position.Y - sprite.Height / 2,
+                sprite.Width, sprite.Height);
         }
 
         public void LoadContent()
@@ -57,34 +57,37 @@ namespace TalesOfSenylan.Models.Characters
         public override void Update(GameTime gameTime)
         {
             currentMovementDuration = currentMovementDuration.Add(gameTime.ElapsedGameTime);
-            
+
             if (!hasMovedRight)
             {
-                position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.X += speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
                 if (ShouldChangeDirection(gameTime))
                 {
                     hasMovedRight = true;
                     lastDirectionChangeTime = gameTime.TotalGameTime;
                 }
-            } else if (!hasMovedBottom)
+            }
+            else if (!hasMovedBottom)
             {
-                position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.Y += speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
                 if (ShouldChangeDirection(gameTime))
                 {
                     hasMovedBottom = true;
                     lastDirectionChangeTime = gameTime.TotalGameTime;
                 }
-            } else if (!hasMovedLeft)
+            }
+            else if (!hasMovedLeft)
             {
-                position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.X -= speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
                 if (ShouldChangeDirection(gameTime))
                 {
                     hasMovedLeft = true;
                     lastDirectionChangeTime = gameTime.TotalGameTime;
                 }
-            } else if (!hasMovedTop)
+            }
+            else if (!hasMovedTop)
             {
-                position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.Y -= speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
                 if (ShouldChangeDirection(gameTime))
                 {
                     hasMovedTop = true;
@@ -99,6 +102,7 @@ namespace TalesOfSenylan.Models.Characters
                     hasMovedTop = false;
                 }
             }
+
             SetHitbox(position.X, position.Y);
         }
 

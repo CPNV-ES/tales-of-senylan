@@ -10,7 +10,7 @@ namespace TalesOfSenylan.Models.Dungeon
         WEST
     }
 
-    static class CardinalPointExtension
+    internal static class CardinalPointExtension
     {
         public static CardinalPoint Opposite(this CardinalPoint cardinalPoint)
         {
