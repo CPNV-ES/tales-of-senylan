@@ -1,49 +1,57 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 
 namespace TalesOfSenylan.Models.Characters
 {
     public abstract class Character
     {
-        protected Texture2D Sprite;
-        public Vector2 Position;
-        public float Speed { get; set; }
-        protected RectangleF Hitbox;
-        protected Dungeon Dungeon { get; }
+        protected RectangleF hitbox;
+        public Vector2 position;
+        protected Texture2D sprite;
 
-        public Character(Dungeon dungeon, Vector2 initialPosition)
+        public Character(Dungeon.Dungeon dungeon, Vector2 initialPosition)
         {
-            Dungeon = dungeon;
-            Position = initialPosition;
-
-        }
-        public RectangleF getHitbox()
-        {
-            return Hitbox;
+            this.dungeon = dungeon;
+            position = initialPosition;
         }
 
-        public void setHitbox(float x, float y)
-		{
-            Hitbox.X = x - Sprite.Width / 2;
-            Hitbox.Y = y - Sprite.Height / 2;
-		}
+        public Character(Vector2 initialPosition)
+        {
+            position = initialPosition;
+        }
+
+        public int maxHealth { get; set; }
+        public int health { get; set; }
+        public int maxMana { get; set; }
+        public int mana { get; set; }
+        public float speed { get; set; }
+        protected Dungeon.Dungeon dungeon { get; }
+
+        public RectangleF GetHitbox()
+        {
+            return hitbox;
+        }
+
+        public void SetHitbox(float x, float y)
+        {
+            hitbox.X = x - sprite.Width / 2;
+            hitbox.Y = y - sprite.Height / 2;
+        }
 
         //Function used to debug hitbox
         public void DrawHitbox(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawRectangle(getHitbox(), Color.Red);
+            spriteBatch.DrawRectangle(GetHitbox(), Color.Red);
         }
 
-        public bool IsCollided(RectangleF E) => Hitbox.Intersects(E);
+        public bool IsCollided(RectangleF E)
+        {
+            return hitbox.Intersects(E);
+        }
 
         public abstract void Update(GameTime gameTime);
 
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
-
     }
 }

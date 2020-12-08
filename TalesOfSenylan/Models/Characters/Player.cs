@@ -1,12 +1,9 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using TalesOfSenylan.Models.Characters;
 using MonoGame.Extended;
-using System;
-using System.Diagnostics;
-using MonoGame.Extended.Sprites;
-using MonoGame.Extended.Collisions;
+using TalesOfSenylan.Models.Characters;
+using TalesOfSenylan.Models.Dungeon;
 
 namespace TalesOfSenylan
 {
@@ -16,35 +13,39 @@ namespace TalesOfSenylan
         Attacking,
         Walking
     }
+
     public class Player : Character
     {
-        private int c = 1;
-        private TimeSpan attackRate = new TimeSpan(0, 0, 1); //cooldown attack set to 1sec
-        private TimeSpan nextAttack = new TimeSpan();
+        private readonly TimeSpan attackRate = new TimeSpan(0, 0, 1); //cooldown attack set to 1sec
+        private int c = 1; //Debug counter of the attack
+        private TimeSpan nextAttack;
 
-		public Player(Dungeon dungeon, Vector2 initialPosition) : base(dungeon, initialPosition)
+        public Player(Dungeon dungeon, Vector2 initialPosition) : base(dungeon, initialPosition)
         {
             LoadContent();
-            Speed = 200;
-            Hitbox = new RectangleF(Position.X - Sprite.Width / 2, Position.Y - Sprite.Height / 2, Sprite.Width, Sprite.Height);
+            speed = 200;
+            maxHealth = health = 300;
+            maxMana = mana = 200;
+            hitbox = new RectangleF(position.X - sprite.Width / 2, position.Y - sprite.Height / 2, sprite.Width,
+                sprite.Height);
         }
 
-		private State state { get; set; }
+        private State state { get; set; }
 
-		public void LoadContent()
+        public void LoadContent()
         {
-            Sprite = Dungeon.Content.Load<Texture2D>("ball");
+            sprite = dungeon.content.Load<Texture2D>("ball");
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
-                Sprite,
-				Position,
+                sprite,
+                position,
                 null,
                 Color.White,
                 0f,
-                new Vector2(Sprite.Width / 2, Sprite.Height / 2),
+                new Vector2(sprite.Width / 2, sprite.Height / 2),
                 Vector2.One,
                 SpriteEffects.None,
                 0.0f
@@ -55,16 +56,21 @@ namespace TalesOfSenylan
 
         public override void Update(GameTime gameTime)
         {
-            setHitbox(Position.X, Position.Y);
+            SetHitbox(position.X, position.Y);
         }
 
-        public void DoDamage(GameTime gameTime)
+        public int GetDamagePoints(GameTime gameTime)
         {
+            var dmgValue = 50;
             if (gameTime.TotalGameTime.TotalSeconds.CompareTo(nextAttack.TotalSeconds) == 1)
-			{
-                Debug.WriteLine("ATTAQUE :" + c++ + " fois");
+            {
+                //Debug.WriteLine("ATTAQUE :" + c++ + " fois");
                 nextAttack = gameTime.TotalGameTime.Add(attackRate);
-            }            
+
+                return dmgValue;
+            }
+
+            return 0;
         }
     }
 }
