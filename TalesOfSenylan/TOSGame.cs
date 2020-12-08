@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TalesOfSenylan.Models.Dungeon;
+using TalesOfSenylan.Models.Utilities;
 
 namespace TalesOfSenylan
 {
@@ -25,9 +26,9 @@ namespace TalesOfSenylan
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            /*Graphics.PreferredBackBufferWidth = 1080;  // set this value to the desired width of your window
-            Graphics.PreferredBackBufferHeight = 720;   // set this value to the desired height of your window
-            Graphics.ApplyChanges();*/
+            Graphics.PreferredBackBufferWidth = Constants.GameWidth;  // set this value to the desired width of your window
+            Graphics.PreferredBackBufferHeight = Constants.GameHeight;   // set this value to the desired height of your window
+            Graphics.ApplyChanges();
             base.Initialize();
         }
 

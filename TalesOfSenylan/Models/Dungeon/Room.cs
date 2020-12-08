@@ -89,8 +89,8 @@ namespace TalesOfSenylan.Models.Dungeon
 
         private static Vector2 GenerateRandomStartingPosition()
         {
-            int x = Utilities.Utilities.GetRandomNumber(20, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width);
-            int y = Utilities.Utilities.GetRandomNumber(20, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
+            int x = Utilities.Utilities.GetRandomNumber(20, Constants.GameWidth);
+            int y = Utilities.Utilities.GetRandomNumber(20, Constants.GameHeight);
 
             return new Vector2(x, y);
         }
