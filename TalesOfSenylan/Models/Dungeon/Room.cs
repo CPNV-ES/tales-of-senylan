@@ -79,21 +79,29 @@ namespace TalesOfSenylan.Models.Dungeon
 
         private void CheckRoomChange()
         {
+            // TODO : Refactor this
             if (player.position.X <= 0)
             {
+                dungeon.ChangeRoom(exits[CardinalPoint.WEST], CardinalPoint.WEST.Opposite());
                 Debug.WriteLine("Took west exit");
-            } else if (player.position.X >= Constants.GameWidth)
+            }
+            else if (player.position.X >= Constants.GameWidth)
             {
+                dungeon.ChangeRoom(exits[CardinalPoint.EAST], CardinalPoint.EAST.Opposite());
                 Debug.WriteLine("Took east exit");
-            } else if (player.position.Y <= 0)
+            }
+            else if (player.position.Y <= 0)
             {
+                dungeon.ChangeRoom(exits[CardinalPoint.NORTH], CardinalPoint.NORTH.Opposite());
                 Debug.WriteLine("Took north exit");
-            } else if (player.position.Y >= Constants.GameHeight)
+            }
+            else if (player.position.Y >= Constants.GameHeight)
             {
+                dungeon.ChangeRoom(exits[CardinalPoint.SOUTH], CardinalPoint.SOUTH.Opposite());
                 Debug.WriteLine("Took south exit");
             }
         }
-        
+
         private static Vector2 GenerateRandomStartingPosition()
         {
             var x = Utilities.Utilities.GetRandomNumber(20, Constants.GameWidth);

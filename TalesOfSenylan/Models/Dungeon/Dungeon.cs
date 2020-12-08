@@ -59,6 +59,28 @@ namespace TalesOfSenylan.Models.Dungeon
             currentRoom.Update(gameTime);
         }
 
+        public void ChangeRoom(Room newRoom, CardinalPoint comingFrom)
+        {
+            var offset = 10;
+            switch (comingFrom)
+            {
+                case CardinalPoint.NORTH:
+                    player.position = new Vector2(Constants.GameWidth / 2, offset);
+                    break;
+                case CardinalPoint.SOUTH:
+                    player.position = new Vector2(Constants.GameWidth / 2, Constants.GameHeight - offset);
+                    break;
+                case CardinalPoint.EAST:
+                    player.position = new Vector2(Constants.GameWidth - offset, Constants.GameHeight / 2);
+                    break;
+                case CardinalPoint.WEST:
+                    player.position = new Vector2(offset, Constants.GameHeight / 2);
+                    break;
+            }
+
+            currentRoom = newRoom;
+        }
+
         #region Only used by the maze generation algorithm
 
         private int width { get; }
