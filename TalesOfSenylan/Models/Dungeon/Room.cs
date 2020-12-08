@@ -191,30 +191,20 @@ namespace TalesOfSenylan.Models.Dungeon
             {
                 for (int j = 0; j < tiles[0].Length; j++)
                 {
-                    if (i == 0)
-                    {
-                        if (tiles[i][j].Intersects(_player))
+                    if (tiles[i][j].Intersects(_player)) {
+                        if (i == 0)
                         {
                             player.position.X += 1f;
                         }
-                    }
-                    else if (i == tiles.Length - 1)
-                    {
-                        if (tiles[i][j].Intersects(_player))
+                        else if (i == tiles.Length - 1)
                         {
                             player.position.X -= 1f;
                         }
-                    }
-                    else if (j == 0)
-                    {
-                        if (tiles[i][j].Intersects(_player))
+                        else if (j == 0)
                         {
                             player.position.Y += 1f;
                         }
-                    }
-                    else if (j == tiles[0].Length - 1)
-                    {
-                        if (tiles[i][j].Intersects(_player))
+                        else if (j == tiles[0].Length - 1)
                         {
                             player.position.Y -= 1f;
                         }
