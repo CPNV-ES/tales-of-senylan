@@ -79,26 +79,11 @@ namespace TalesOfSenylan.Models.Dungeon
 
         private void CheckRoomChange()
         {
-            // TODO : Refactor this
-            if (player.position.X <= 0)
+            CardinalPoint? nullableExitCardinalPoint = DungeonUtilities.GetExitFromPosition(player.position);
+            if (nullableExitCardinalPoint != null)
             {
-                dungeon.ChangeRoom(exits[CardinalPoint.WEST], CardinalPoint.WEST.Opposite());
-                Debug.WriteLine("Took west exit");
-            }
-            else if (player.position.X >= Constants.GameWidth)
-            {
-                dungeon.ChangeRoom(exits[CardinalPoint.EAST], CardinalPoint.EAST.Opposite());
-                Debug.WriteLine("Took east exit");
-            }
-            else if (player.position.Y <= 0)
-            {
-                dungeon.ChangeRoom(exits[CardinalPoint.NORTH], CardinalPoint.NORTH.Opposite());
-                Debug.WriteLine("Took north exit");
-            }
-            else if (player.position.Y >= Constants.GameHeight)
-            {
-                dungeon.ChangeRoom(exits[CardinalPoint.SOUTH], CardinalPoint.SOUTH.Opposite());
-                Debug.WriteLine("Took south exit");
+                CardinalPoint exitCardinalPoint = (CardinalPoint) nullableExitCardinalPoint;
+                dungeon.ChangeRoom(exits[exitCardinalPoint], exitCardinalPoint.Opposite());
             }
         }
 

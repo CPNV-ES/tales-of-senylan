@@ -1,4 +1,7 @@
-﻿namespace TalesOfSenylan.Models.Utilities
+﻿using Microsoft.Xna.Framework;
+using TalesOfSenylan.Models.Dungeon;
+
+namespace TalesOfSenylan.Models.Utilities
 {
     public class DungeonUtilities
     {
@@ -7,9 +10,29 @@
             return dungeonNumber * 5;
         }
 
-        public static int GetNumberOfRooms(int dungeonNumber)
+        public static CardinalPoint? GetExitFromPosition(Vector2 position)
         {
-            return dungeonNumber * 3;
+            if (position.X <= 0)
+            {
+                return CardinalPoint.WEST;
+            }
+
+            if (position.X >= Constants.GameWidth)
+            {
+                return CardinalPoint.EAST;
+            }
+
+            if (position.Y <= 0)
+            {
+                return CardinalPoint.NORTH;
+            }
+
+            if (position.Y >= Constants.GameHeight)
+            {
+                return CardinalPoint.SOUTH;
+            }
+
+            return null;
         }
     }
 }
