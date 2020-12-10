@@ -120,25 +120,13 @@ namespace TalesOfSenylan.Models.Dungeon
 
         private void GenerateRoomFloor()
         {
-            var north = false;
-            var south = false;
-            var west = false;
-            var east = false;
-
-            foreach(CardinalPoint c in exits.Keys)
-            {
-                if (c == CardinalPoint.NORTH) north = true;
-                else if (c == CardinalPoint.SOUTH) south = true;
-                else if (c == CardinalPoint.WEST) west = true;
-                else if (c == CardinalPoint.EAST) east = true;
-            }
-
             tiles = new Rectangle[worldWidth][];
 
             //Setting tiles with Rectangle
             for (var i = 0; i < worldWidth; i++)
             {
                 tiles[i] = new Rectangle[worldHeight];
+                
                 for (var k = 0; k < worldHeight; k++)
                     tiles[i][k] = new Rectangle(i * TileWidth, k * TileHeight, TileWidth, TileHeight);
             }
@@ -146,6 +134,20 @@ namespace TalesOfSenylan.Models.Dungeon
 
         private void DrawRoomFloor(SpriteBatch sp)
         {
+            var north = false;
+            var south = false;
+            var west = false;
+            var east = false;
+
+            foreach (CardinalPoint c in exits.Keys)
+            {
+                if (c == CardinalPoint.NORTH) north = true;
+                else if (c == CardinalPoint.SOUTH) south = true;
+                else if (c == CardinalPoint.WEST) west = true;
+                else if (c == CardinalPoint.EAST) east = true;
+            }
+
+
             //Draw sprites to Rectangle. Checking if it's a wall or the floor.
             for (var i = 0; i < tiles.Length; i++)
                 for (var j = 0; j < tiles[0].Length; j++)
@@ -159,8 +161,25 @@ namespace TalesOfSenylan.Models.Dungeon
                                 Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         else
                             //sp.DrawRectangle(new RectangleF(tiles[i][j].X, tiles[i][j].Y, tiles[i][j].Width, tiles[i][j].Height), Color.Red);
-                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tile02"), tiles[i][j], tiles[0][0],
-                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            if (north)
+                            {
+                                if (i == tiles.Length / 2 || i == tiles.Length / 2 - 3 || i == tiles.Length / 2 - 2 || i == tiles.Length / 2 - 1 || i == tiles.Length / 2 + 1 || i == tiles.Length / 2 + 2)
+                                {
+                                    // Draw nothing
+                                    tiles[i][j].Y = -30;
+                                    tiles[i][j].Height = 0;
+                            }
+                            else
+                                {
+                                    sp.Draw(contentManager.Load<Texture2D>("Tiles/tile02"), tiles[i][j], tiles[0][0],
+                                            Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                                }
+                            }
+                            else
+                            {
+                                sp.Draw(contentManager.Load<Texture2D>("Tiles/tile02"), tiles[i][j], tiles[0][0],
+                                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            }
                     }
                     else if (i == 0)
                     {
@@ -168,8 +187,25 @@ namespace TalesOfSenylan.Models.Dungeon
                             sp.Draw(contentManager.Load<Texture2D>("Tiles/tileBL"), tiles[i][j], tiles[0][0],
                                 Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         else
-                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tile04"), tiles[i][j], tiles[0][0],
-                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            if (west)
+                            {
+                                if (j == tiles[0].Length / 2 || j == tiles[0].Length / 2 - 3 || j == tiles[0].Length / 2 - 2 || j == tiles[0].Length / 2 - 1 || j == tiles[0].Length / 2 + 1 || j == tiles[0].Length / 2 + 2)
+                                {
+                                    // Draw nothing
+                                    tiles[i][j].X = -30;
+                                    tiles[i][j].Width = 0;
+                                }
+                                else
+                                {
+                                    sp.Draw(contentManager.Load<Texture2D>("Tiles/tile04"), tiles[i][j], tiles[0][0],
+                                        Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                                }
+                            }
+                            else
+                            {
+                                sp.Draw(contentManager.Load<Texture2D>("Tiles/tile04"), tiles[i][j], tiles[0][0],
+                                    Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            }
                     }
                     else if (i == tiles.Length - 1)
                     {
@@ -177,13 +213,46 @@ namespace TalesOfSenylan.Models.Dungeon
                             sp.Draw(contentManager.Load<Texture2D>("Tiles/tileBR"), tiles[i][j], tiles[0][0],
                                 Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         else
-                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tile05"), tiles[i][j], tiles[0][0],
-                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            if (east)
+                            {
+                                if (j == tiles[0].Length / 2 || j == tiles[0].Length / 2 - 3 || j == tiles[0].Length / 2 - 2 || j == tiles[0].Length / 2 - 1 || j == tiles[0].Length / 2 + 1 || j == tiles[0].Length / 2 + 2)
+                                {
+                                    // Draw nothing
+                                    tiles[i][j].X += 30;
+                                    tiles[i][j].Width = 0;
+                                }
+                                else
+                                {
+                                    sp.Draw(contentManager.Load<Texture2D>("Tiles/tile05"), tiles[i][j], tiles[0][0],
+                                            Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                                }
+                            }
+                            else
+                            {
+                                sp.Draw(contentManager.Load<Texture2D>("Tiles/tile05"), tiles[i][j], tiles[0][0],
+                                        Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            }
                     }
                     else if (j == tiles[0].Length - 1)
                     {
-                        sp.Draw(contentManager.Load<Texture2D>("Tiles/tile06"), tiles[i][j], tiles[0][0], Color.White,
-                            0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                        if (south)
+                        {
+                            if (i == tiles.Length / 2 || i == tiles.Length / 2 - 3 || i == tiles.Length / 2 - 2 || i == tiles.Length / 2 - 1 || i == tiles.Length / 2 + 1 || i == tiles.Length / 2 + 2)
+                            {
+                                // Draw nothing
+                                tiles[i][j].Height = 0;
+                                tiles[i][j].Y += 30;
+                                sp.DrawRectangle(new RectangleF(tiles[i][j].X, tiles[i][j].Y, tiles[i][j].Width, tiles[i][j].Height), Color.Red);
+                            }
+                            else
+                            {
+                                sp.Draw(contentManager.Load<Texture2D>("Tiles/tile06"), tiles[i][j], tiles[0][0], Color.White,0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                            }
+                        }
+                        else
+                        {
+                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tile06"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                        }  
                     }
                     else
                     {
