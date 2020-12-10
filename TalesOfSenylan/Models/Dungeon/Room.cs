@@ -47,7 +47,7 @@ namespace TalesOfSenylan.Models.Dungeon
             keyboardState = Keyboard.GetState();
 
             HandleMovement(gameTime);
-            WallCollision(player.GetHitbox().ToRectangle());
+            HandleWallCollision(player.GetHitbox().ToRectangle());
             player.Update(gameTime);
 
             // Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
@@ -59,11 +59,11 @@ namespace TalesOfSenylan.Models.Dungeon
                 if (player.IsCollided(enemy.GetHitbox()) &&
                     (keyboardState.IsKeyDown(Keys.Space) || keyboardState.IsKeyDown(Keys.K)))
                 {
-                    enemy.health -= HandleAttack(gameTime);
+                    enemy.health -= GetDamagesInflicted(gameTime);
 
                     if (enemy.health <= 0) enemies.Remove(enemy);
                 }
-                WallCollisionEnemy(enemy);
+                HandleWallCollisionEnemy(enemy);
                 enemy.Update(gameTime);
             }
         }
@@ -96,7 +96,7 @@ namespace TalesOfSenylan.Models.Dungeon
         }
 
         //player Attack Handling
-        private int HandleAttack(GameTime gameTime)
+        private int GetDamagesInflicted(GameTime gameTime)
         {
             return player.GetDamagePoints(gameTime);
         }
@@ -120,6 +120,19 @@ namespace TalesOfSenylan.Models.Dungeon
 
         private void GenerateRoomFloor()
         {
+            var north = false;
+            var south = false;
+            var west = false;
+            var east = false;
+
+            foreach(CardinalPoint c in exits.Keys)
+            {
+                if (c == CardinalPoint.NORTH) north = true;
+                else if (c == CardinalPoint.SOUTH) south = true;
+                else if (c == CardinalPoint.WEST) west = true;
+                else if (c == CardinalPoint.EAST) east = true;
+            }
+
             tiles = new Rectangle[worldWidth][];
 
             //Setting tiles with Rectangle
@@ -135,52 +148,52 @@ namespace TalesOfSenylan.Models.Dungeon
         {
             //Draw sprites to Rectangle. Checking if it's a wall or the floor.
             for (var i = 0; i < tiles.Length; i++)
-            for (var j = 0; j < tiles[0].Length; j++)
-                if (j == 0)
-                {
-                    if (i == 0)
-                        sp.Draw(contentManager.Load<Texture2D>("Tiles/tile01"), tiles[i][j], tiles[0][0],
-                            Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                for (var j = 0; j < tiles[0].Length; j++)
+                    if (j == 0)
+                    {
+                        if (i == 0)
+                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tile01"), tiles[i][j], tiles[0][0],
+                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                        else if (i == tiles.Length - 1)
+                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tile03"), tiles[i][j], tiles[0][0],
+                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                        else
+                            //sp.DrawRectangle(new RectangleF(tiles[i][j].X, tiles[i][j].Y, tiles[i][j].Width, tiles[i][j].Height), Color.Red);
+                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tile02"), tiles[i][j], tiles[0][0],
+                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                    }
+                    else if (i == 0)
+                    {
+                        if (j == tiles[0].Length - 1)
+                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tileBL"), tiles[i][j], tiles[0][0],
+                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                        else
+                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tile04"), tiles[i][j], tiles[0][0],
+                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                    }
                     else if (i == tiles.Length - 1)
-                        sp.Draw(contentManager.Load<Texture2D>("Tiles/tile03"), tiles[i][j], tiles[0][0],
-                            Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                    {
+                        if (j == tiles[0].Length - 1)
+                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tileBR"), tiles[i][j], tiles[0][0],
+                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                        else
+                            sp.Draw(contentManager.Load<Texture2D>("Tiles/tile05"), tiles[i][j], tiles[0][0],
+                                Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                    }
+                    else if (j == tiles[0].Length - 1)
+                    {
+                        sp.Draw(contentManager.Load<Texture2D>("Tiles/tile06"), tiles[i][j], tiles[0][0], Color.White,
+                            0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                    }
                     else
+                    {
                         //sp.DrawRectangle(new RectangleF(tiles[i][j].X, tiles[i][j].Y, tiles[i][j].Width, tiles[i][j].Height), Color.Red);
-                        sp.Draw(contentManager.Load<Texture2D>("Tiles/tile02"), tiles[i][j], tiles[0][0],
-                            Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-                }
-                else if (i == 0)
-                {
-                    if (j == tiles[0].Length - 1)
-                        sp.Draw(contentManager.Load<Texture2D>("Tiles/tileBL"), tiles[i][j], tiles[0][0],
-                            Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-                    else
-                        sp.Draw(contentManager.Load<Texture2D>("Tiles/tile04"), tiles[i][j], tiles[0][0],
-                            Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-                }
-                else if (i == tiles.Length - 1)
-                {
-                    if (j == tiles[0].Length - 1)
-                        sp.Draw(contentManager.Load<Texture2D>("Tiles/tileBR"), tiles[i][j], tiles[0][0],
-                            Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-                    else
-                        sp.Draw(contentManager.Load<Texture2D>("Tiles/tile05"), tiles[i][j], tiles[0][0],
-                            Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-                }
-                else if (j == tiles[0].Length - 1)
-                {
-                    sp.Draw(contentManager.Load<Texture2D>("Tiles/tile06"), tiles[i][j], tiles[0][0], Color.White,
-                        0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-                }
-                else
-                {
-                    //sp.DrawRectangle(new RectangleF(tiles[i][j].X, tiles[i][j].Y, tiles[i][j].Width, tiles[i][j].Height), Color.Red);
-                    sp.Draw(contentManager.Load<Texture2D>("Tiles/tile07"), tiles[i][j], tiles[0][0], Color.White,
-                        0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
-                }
+                        sp.Draw(contentManager.Load<Texture2D>("Tiles/tile07"), tiles[i][j], tiles[0][0], Color.White,
+                            0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
+                    }
         }
 
-        private void WallCollision(Rectangle _player)
+        private void HandleWallCollision(Rectangle _player)
         {
             for (var i = 0; i < tiles.Length; i++)
             for (var j = 0; j < tiles[0].Length; j++)
@@ -196,7 +209,7 @@ namespace TalesOfSenylan.Models.Dungeon
                 }
         }
 
-        private void WallCollisionEnemy(Enemy enemy)
+        private void HandleWallCollisionEnemy(Enemy enemy)
         {
             for (var i = 0; i < tiles.Length; i++)
                 for (var j = 0; j < tiles[0].Length; j++)
