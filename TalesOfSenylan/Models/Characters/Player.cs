@@ -21,7 +21,7 @@ namespace TalesOfSenylan
         private readonly TimeSpan attackRate = new TimeSpan(0, 0, 1); //cooldown attack set to 1sec
         private int c = 1; //Debug counter of the attack
         private TimeSpan nextAttack;
-        private Inventory inventory = new Inventory();
+        public Inventory inventory { get; }= new Inventory();
         
 
         public Player(Dungeon dungeon, Vector2 initialPosition) : base(dungeon, initialPosition)
