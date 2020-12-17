@@ -145,7 +145,7 @@ namespace TalesOfSenylan.Models.Dungeon
                 else if (c == CardinalPoint.SOUTH) south = true;
                 else if (c == CardinalPoint.WEST) west = true;
                 else if (c == CardinalPoint.EAST) east = true;
-            }
+                }
 
 
             //Draw sprites to Rectangle. Checking if it's a wall or the floor.
@@ -168,8 +168,8 @@ namespace TalesOfSenylan.Models.Dungeon
                                     // Draw nothing
                                     tiles[i][j].Y = -30;
                                     tiles[i][j].Height = 0;
-                            }
-                            else
+                                }
+                                else
                                 {
                                     sp.Draw(contentManager.Load<Texture2D>("Tiles/tile02"), tiles[i][j], tiles[0][0],
                                             Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
@@ -177,6 +177,12 @@ namespace TalesOfSenylan.Models.Dungeon
                             }
                             else
                             {
+                                //Reset position since we move it to make an exit.
+                                if (tiles[i][j].Y != 0)
+                                {
+                                    tiles[i][j].Height = TileHeight;
+                                    tiles[i][j].Y = 0;
+                                }
                                 sp.Draw(contentManager.Load<Texture2D>("Tiles/tile02"), tiles[i][j], tiles[0][0],
                                                 Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                             }
@@ -203,6 +209,12 @@ namespace TalesOfSenylan.Models.Dungeon
                             }
                             else
                             {
+                                if(tiles[i][j].X != 0)
+                                {
+                                    tiles[i][j].X = 0;
+                                    tiles[i][j].Width = TileWidth;
+                                }
+                                
                                 sp.Draw(contentManager.Load<Texture2D>("Tiles/tile04"), tiles[i][j], tiles[0][0],
                                     Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                             }
@@ -229,6 +241,13 @@ namespace TalesOfSenylan.Models.Dungeon
                             }
                             else
                             {
+                                if (tiles[i][j].X != tiles[i][tiles[0].Length -1].X)
+                                {
+                                    tiles[i][j].Width = TileWidth;
+                                    tiles[i][j].X = tiles[i][tiles[0].Length - 1].X;
+                                }
+
+                                
                                 sp.Draw(contentManager.Load<Texture2D>("Tiles/tile05"), tiles[i][j], tiles[0][0],
                                         Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                             }
@@ -251,6 +270,13 @@ namespace TalesOfSenylan.Models.Dungeon
                         }
                         else
                         {
+
+                            if(tiles[i][j].Y != tiles[tiles.Length - 1][j].Y)
+                            {
+                                tiles[i][j].Height = TileHeight;
+                                tiles[i][j].Y = tiles[tiles.Length - 1][j].Y;
+                            }
+
                             sp.Draw(contentManager.Load<Texture2D>("Tiles/tile06"), tiles[i][j], tiles[0][0], Color.White, 0.0f, Vector2.Zero, SpriteEffects.None, 0.3f);
                         }  
                     }
