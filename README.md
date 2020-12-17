@@ -8,16 +8,15 @@ Le joueur pourra sélectionner 3 types d'héros : Chevalier / Mage / Archer. Il 
 
 ## Outils/Technologie
 
-Pour faire ce jeu, nous utiliserons les outils suivants:
-
-- Monogame (librairie .NET)
 - C#
-- [IceScrum](https://cloud.icescrum.com/p/MAW21XXG2/#/project) pour les sprints
-- Aseprite/Inkscape pour les sprites
+- [MonoGame](https://www.monogame.net/)
+- [IceScrum](https://icescrum.cpnv.ch/p/MAW21XXG2/)
 
 ## Documentation
 
-Le dossier "Docs" contient tout ce qui est fichier externe lié au code (modèles, diagrammes, ...). Le reste se trouve dans le [Wiki](https://github.com/Seni-J/tales-of-senylan/wiki).
+Le dossier "Docs" contient tout ce qui est fichier externe lié au code (modèles, diagrammes, ...).
+
+Le reste se trouve dans le [Wiki](https://github.com/CPNV-ES/tales-of-senylan/wiki).
 
 ## Auteurs
 

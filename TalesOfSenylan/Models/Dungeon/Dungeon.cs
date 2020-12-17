@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TalesOfSenylan.Models.Utilities;
 
 namespace TalesOfSenylan.Models.Dungeon
 {
     public class Dungeon
     {
-        private readonly Room currentRoom;
+        private Room currentRoom;
         private readonly Vector2 startPosition;
 
         public Dungeon(IServiceProvider serviceProvider, int dungeonNumber, int width, int height)
@@ -28,7 +29,7 @@ namespace TalesOfSenylan.Models.Dungeon
                 var roomsRow = new List<Room>();
                 for (var j = 0; j < width; j++)
                 {
-                    var r = new Room(new Vector2(j, i), dungeonNumber, player, content);
+                    var r = new Room(new Vector2(j, i), this, player, content);
                     roomsRow.Add(r);
                 }
 
@@ -44,7 +45,7 @@ namespace TalesOfSenylan.Models.Dungeon
         private Player player { get; }
         public List<List<Room>> rooms { get; set; }
 
-        private int dungeonNumber { get; }
+        public int dungeonNumber { get; }
 
         public ContentManager content { get; set; }
 
@@ -56,6 +57,28 @@ namespace TalesOfSenylan.Models.Dungeon
         public void Update(GameTime gameTime)
         {
             currentRoom.Update(gameTime);
+        }
+
+        public void ChangeRoom(Room newRoom, CardinalPoint comingFrom)
+        {
+            var offset = 10;
+            switch (comingFrom)
+            {
+                case CardinalPoint.NORTH:
+                    player.position = new Vector2(Constants.GameWidth / 2, offset);
+                    break;
+                case CardinalPoint.SOUTH:
+                    player.position = new Vector2(Constants.GameWidth / 2, Constants.GameHeight - offset);
+                    break;
+                case CardinalPoint.EAST:
+                    player.position = new Vector2(Constants.GameWidth - offset, Constants.GameHeight / 2);
+                    break;
+                case CardinalPoint.WEST:
+                    player.position = new Vector2(offset, Constants.GameHeight / 2);
+                    break;
+            }
+
+            currentRoom = newRoom;
         }
 
         #region Only used by the maze generation algorithm
