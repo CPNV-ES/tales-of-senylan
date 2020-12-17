@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using TalesOfSenylan.Models.Characters;
+using TalesOfSenylan.Models.Items;
 using TalesOfSenylan.Models.Utilities;
 
 namespace TalesOfSenylan.Models.Dungeon
@@ -46,8 +47,9 @@ namespace TalesOfSenylan.Models.Dungeon
         {
             keyboardState = Keyboard.GetState();
 
-            HandleMovement(gameTime);
             HandleWallCollision(player.GetHitbox().ToRectangle());
+            HandleUIInput(gameTime);
+            HandleMovementInput(gameTime);
             player.Update(gameTime);
 
             // Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
@@ -65,6 +67,18 @@ namespace TalesOfSenylan.Models.Dungeon
                 }
                 HandleWallCollisionEnemy(enemy);
                 enemy.Update(gameTime);
+            }
+        }
+
+        private void HandleUIInput(GameTime gameTime)
+        {
+            if (keyboardState.IsKeyDown(Keys.I))
+            {
+                Debug.WriteLine("The player has the following items:");
+                foreach (KeyValuePair<Item, int> entry in player.inventory)
+                {
+                    Debug.WriteLine(entry.Key.name + ". Quantity: " + entry.Value);
+                }
             }
         }
 
@@ -102,7 +116,7 @@ namespace TalesOfSenylan.Models.Dungeon
         }
 
         //player Movement Handling
-        private void HandleMovement(GameTime gameTime)
+        private void HandleMovementInput(GameTime gameTime)
         {
             if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W))
                 player.position.Y -= player.speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
