@@ -30,15 +30,14 @@ namespace TalesOfSenylan.Models.Dungeon
             this.player = player;
             this.dungeon = dungeon;
             enemies = new List<Enemy>();
+            chests = new List<Chest>();
             this.contentManager = contentManager;
 
             for (var i = 0; i < DungeonUtilities.GetNumberOfEnemies(dungeon.dungeonNumber); i++)
                 enemies.Add(new Enemy(GenerateRandomPosition(), this));
 
-            if (ShouldHaveChest(this))
-            {
-                chest = GenerateChest();
-            }
+            for (var i = 0; i < GetNumberOfChestsToGenerate(); i++)
+                chests.Add(new Chest(GenerateRandomPosition(), dungeon));
 
             GenerateRoomFloor();
         }
@@ -47,7 +46,7 @@ namespace TalesOfSenylan.Models.Dungeon
         public List<Enemy> enemies { get; set; }
         public ContentManager contentManager { get; }
         private Dungeon dungeon;
-        private Chest chest;
+        private List<Chest> chests;
 
         public void Update(GameTime gameTime)
         {
@@ -75,11 +74,14 @@ namespace TalesOfSenylan.Models.Dungeon
                 enemy.Update(gameTime);
             }
 
-            if (chest != null && player.IsCollided(chest.hitbox) &&
-                (keyboardState.IsKeyDown(Keys.Space) || keyboardState.IsKeyDown(Keys.K)))
+            foreach (var chest in chests.ToList())
             {
-                chest.Destroy();
-                chest = null;
+                if (player.IsCollided(chest.hitbox) &&
+                    (keyboardState.IsKeyDown(Keys.E)))
+                {
+                    chest.Destroy();
+                    chests.Remove(chest);
+                }
             }
         }
 
@@ -101,7 +103,7 @@ namespace TalesOfSenylan.Models.Dungeon
 
             foreach (var enemy in enemies) enemy.Draw(gameTime, spriteBatch);
             
-            chest?.Draw(gameTime, spriteBatch);
+            foreach (var chest in chests) chest.Draw(gameTime, spriteBatch);
 
             DrawRoomFloor(spriteBatch);
         }
@@ -349,12 +351,12 @@ namespace TalesOfSenylan.Models.Dungeon
                     }
         }
         
-        public bool ShouldHaveChest(Room room)
+        public int GetNumberOfChestsToGenerate()
         {
-            return Utilities.Utilities.GetRandomNumber(0, 100) < 25;
+            return Utilities.Utilities.GetRandomNumber(1, 3);
         }
 
-        public Chest GenerateChest()
+        public Chest GenerateChests()
         {
             return new Chest(GenerateRandomPosition(), dungeon);
         }
