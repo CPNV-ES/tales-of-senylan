@@ -8,5 +8,10 @@ namespace TalesOfSenylan.Models.Items
         {
             this.name = name;
         }
+
+        public override int GetHashCode()
+        {
+            return name.GetHashCode();
+        }
     }
 }
