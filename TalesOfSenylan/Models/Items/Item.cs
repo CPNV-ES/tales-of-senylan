@@ -13,5 +13,17 @@ namespace TalesOfSenylan.Models.Items
         {
             return name.GetHashCode();
         }
+
+        public override bool Equals(object? obj)
+        {
+            var item = obj as Item;
+
+            if (item == null)
+            {
+                return false;
+            }
+            
+            return name.Equals(item.name);
+        }
     }
 }
