@@ -33,7 +33,12 @@ namespace TalesOfSenylan.Models.Dungeon
             this.contentManager = contentManager;
 
             for (var i = 0; i < DungeonUtilities.GetNumberOfEnemies(dungeon.dungeonNumber); i++)
-                enemies.Add(new Enemy(GenerateRandomStartingPosition(), this));
+                enemies.Add(new Enemy(GenerateRandomPosition(), this));
+
+            if (ShouldHaveChest(this))
+            {
+                chest = GenerateChest();
+            }
 
             GenerateRoomFloor();
         }
@@ -42,6 +47,7 @@ namespace TalesOfSenylan.Models.Dungeon
         public List<Enemy> enemies { get; set; }
         public ContentManager contentManager { get; }
         private Dungeon dungeon;
+        private Chest chest;
 
         public void Update(GameTime gameTime)
         {
@@ -87,6 +93,8 @@ namespace TalesOfSenylan.Models.Dungeon
             player.Draw(gameTime, spriteBatch);
 
             foreach (var enemy in enemies) enemy.Draw(gameTime, spriteBatch);
+            
+            chest?.Draw(gameTime, spriteBatch);
 
             DrawRoomFloor(spriteBatch);
         }
@@ -101,7 +109,7 @@ namespace TalesOfSenylan.Models.Dungeon
             }
         }
 
-        private static Vector2 GenerateRandomStartingPosition()
+        private static Vector2 GenerateRandomPosition()
         {
             var x = Utilities.Utilities.GetRandomNumber(20, Constants.GameWidth);
             var y = Utilities.Utilities.GetRandomNumber(20, Constants.GameHeight);
@@ -332,6 +340,16 @@ namespace TalesOfSenylan.Models.Dungeon
                             enemy.position.Y += 1f;
                         else if (j == tiles[0].Length - 1) enemy.position.Y -= 1f;
                     }
+        }
+        
+        public bool ShouldHaveChest(Room room)
+        {
+            return Utilities.Utilities.GetRandomNumber(0, 100) < 25;
+        }
+
+        public Chest GenerateChest()
+        {
+            return new Chest(GenerateRandomPosition(), dungeon);
         }
 
         #region Only used by the maze generation algorithm
