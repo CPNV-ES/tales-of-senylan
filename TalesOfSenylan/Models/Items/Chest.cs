@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 
 namespace TalesOfSenylan.Models.Items
 {
     public class Chest
     {
         private Vector2 position;
-        public List<Item> items { get; }
+        public List<Item> items { get; set; }
+        public RectangleF hitbox;
         private Texture2D sprite;
         private Dungeon.Dungeon dungeon;
 
@@ -18,6 +20,9 @@ namespace TalesOfSenylan.Models.Items
             LoadContent();
             items = new List<Item>();
             items.Add(new Potion("Health Potion (50)"));
+            
+            hitbox.X = position.X - sprite.Width / 2;
+            hitbox.Y = position.Y - sprite.Height / 2;
         }
         
         public void LoadContent()
@@ -41,5 +46,12 @@ namespace TalesOfSenylan.Models.Items
 
             //DrawHitbox(spriteBatch);
         }
+
+        public void Destroy()
+        {
+            dungeon.player.inventory.AddItem(items.ToArray());
+            items = new List<Item>();
+        }
+        
     }
 }

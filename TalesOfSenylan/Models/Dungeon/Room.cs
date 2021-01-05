@@ -74,6 +74,13 @@ namespace TalesOfSenylan.Models.Dungeon
                 HandleWallCollisionEnemy(enemy);
                 enemy.Update(gameTime);
             }
+
+            if (chest != null && player.IsCollided(chest.hitbox) &&
+                (keyboardState.IsKeyDown(Keys.Space) || keyboardState.IsKeyDown(Keys.K)))
+            {
+                chest.Destroy();
+                chest = null;
+            }
         }
 
         private void HandleUIInput(GameTime gameTime)
