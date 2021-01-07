@@ -83,7 +83,10 @@ namespace TalesOfSenylan.Models.Dungeon
                     }
                     break;
                 case States.InMenu:
-                    Debug.WriteLine("IN MENU");
+                    if (keyboardState.IsKeyDown(Keys.P))
+                    {
+                        _state = States.LeavingMenu;
+                    }
                     break;
                 case States.LeavingMenu:
                     _state = States.InGame;
@@ -96,14 +99,7 @@ namespace TalesOfSenylan.Models.Dungeon
         {
             if (keyboardState.IsKeyDown(Keys.I))
             {
-                if (_state == States.InMenu) 
-                { 
-                    _state = States.LeavingMenu; 
-                }
-                else
-                {
-                    _state = States.InMenu;
-                }
+                _state = States.InMenu;
 
                 Debug.WriteLine("The player has the following items:");
                 foreach (KeyValuePair<Item, int> entry in player.inventory)
