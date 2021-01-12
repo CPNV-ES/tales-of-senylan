@@ -20,17 +20,29 @@ namespace TalesOfSenylan.Models.Dungeon
         private const int TileHeight = 16;
 
         private static Rectangle[][] tiles;
+        private SpriteFont font;
 
 
         private KeyboardState keyboardState;
+
+        enum States
+        {
+            InMenu,
+            LeavingMenu,
+            InGame
+        }
+
+        States _state;
 
         public Room(Vector2 position, Dungeon dungeon, Player player, ContentManager contentManager)
         {
             this.position = position;
             this.player = player;
             this.dungeon = dungeon;
+            _state = States.InGame;
             enemies = new List<Enemy>();
             this.contentManager = contentManager;
+            font = contentManager.Load<SpriteFont>("font");
 
             for (var i = 0; i < DungeonUtilities.GetNumberOfEnemies(dungeon.dungeonNumber); i++)
                 enemies.Add(new Enemy(GenerateRandomStartingPosition(), this));
@@ -46,34 +58,49 @@ namespace TalesOfSenylan.Models.Dungeon
         public void Update(GameTime gameTime)
         {
             keyboardState = Keyboard.GetState();
-
-            HandleWallCollision(player.GetHitbox().ToRectangle());
             HandleUIInput(gameTime);
-            HandleMovementInput(gameTime);
-            player.Update(gameTime);
+            switch (_state) {
+                case States.InGame:
+                    HandleWallCollision(player.GetHitbox().ToRectangle());
+                    HandleMovementInput(gameTime);
+                    player.Update(gameTime);
 
-            // Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
-            CheckRoomChange();
+                    // Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
+                    CheckRoomChange();
 
-            //ToList() to make a copy of the list and remove an item safely from the original list
-            foreach (var enemy in enemies.ToList())
-            {
-                if (player.IsCollided(enemy.GetHitbox()) &&
-                    (keyboardState.IsKeyDown(Keys.Space) || keyboardState.IsKeyDown(Keys.K)))
-                {
-                    enemy.health -= GetDamagesInflicted(gameTime);
+                    //ToList() to make a copy of the list and remove an item safely from the original list
+                    foreach (var enemy in enemies.ToList())
+                    {
+                        if (player.IsCollided(enemy.GetHitbox()) &&
+                            (keyboardState.IsKeyDown(Keys.Space) || keyboardState.IsKeyDown(Keys.K)))
+                        {
+                            enemy.health -= GetDamagesInflicted(gameTime);
 
-                    if (enemy.health <= 0) enemies.Remove(enemy);
-                }
-                HandleWallCollisionEnemy(enemy);
-                enemy.Update(gameTime);
-            }
+                            if (enemy.health <= 0) enemies.Remove(enemy);
+                        }
+                        HandleWallCollisionEnemy(enemy);
+                        enemy.Update(gameTime);
+                    }
+                    break;
+                case States.InMenu:
+                    if (keyboardState.IsKeyDown(Keys.P))
+                    {
+                        _state = States.LeavingMenu;
+                    }
+                    break;
+                case States.LeavingMenu:
+                    _state = States.InGame;
+                    break;
+
+        }
         }
 
         private void HandleUIInput(GameTime gameTime)
         {
             if (keyboardState.IsKeyDown(Keys.I))
             {
+                _state = States.InMenu;
+
                 Debug.WriteLine("The player has the following items:");
                 foreach (KeyValuePair<Item, int> entry in player.inventory)
                 {
@@ -84,11 +111,18 @@ namespace TalesOfSenylan.Models.Dungeon
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            player.Draw(gameTime, spriteBatch);
-
-            foreach (var enemy in enemies) enemy.Draw(gameTime, spriteBatch);
-
-            DrawRoomFloor(spriteBatch);
+            switch (_state)
+            {
+                case (States.InMenu):
+                    DrawInventory(spriteBatch);
+                    break;
+                case (States.InGame):
+                    player.Draw(gameTime, spriteBatch);
+                    foreach (var enemy in enemies) enemy.Draw(gameTime, spriteBatch);
+                    DrawRoomFloor(spriteBatch);
+                    break;
+            }
+            
         }
 
         private void CheckRoomChange()
@@ -131,6 +165,17 @@ namespace TalesOfSenylan.Models.Dungeon
                 player.position.X += player.speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
         }
 
+        private void DrawInventory(SpriteBatch sp)
+        {
+            Vector2 pos = new Vector2(50, 50);
+
+            foreach (KeyValuePair<Item, int> entry in player.inventory)
+            {
+                sp.DrawString(font, entry.Key.name + ". Quantity: " + entry.Value, pos, Color.White);
+                pos.Y += 50;
+                Debug.WriteLine(entry.Key.name + ". Quantity: " + entry.Value);
+            }
+        }
 
         private void GenerateRoomFloor()
         {

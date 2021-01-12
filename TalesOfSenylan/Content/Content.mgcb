@@ -27,6 +27,13 @@
 /processorParam:TextureFormat=Color
 /build:ball.png
 
+#begin font.spritefont
+/importer:FontDescriptionImporter
+/processor:LocalizedFontProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:font.spritefont
+
 #begin orc.png
 /importer:TextureImporter
 /processor:TextureProcessor
