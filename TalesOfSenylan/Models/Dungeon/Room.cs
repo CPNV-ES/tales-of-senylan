@@ -113,12 +113,6 @@ namespace TalesOfSenylan.Models.Dungeon
             if (keyboardState.IsKeyDown(Keys.I))
             {
                 _state = States.InMenu;
-
-                Debug.WriteLine("The player has the following items:");
-                foreach (KeyValuePair<Item, int> entry in player.inventory)
-                {
-                    Debug.WriteLine(entry.Key.name + ". Quantity: " + entry.Value);
-                }
             }
         }
 
@@ -186,7 +180,6 @@ namespace TalesOfSenylan.Models.Dungeon
             {
                 sp.DrawString(font, entry.Key.name + ". Quantity: " + entry.Value, pos, Color.White);
                 pos.Y += 50;
-                Debug.WriteLine(entry.Key.name + ". Quantity: " + entry.Value);
             }
         }
 
