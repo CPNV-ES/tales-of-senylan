@@ -27,7 +27,7 @@ namespace TalesOfSenylan.Models.Items
         
         public void LoadContent()
         {
-            sprite = dungeon.content.Load<Texture2D>("ball");
+            sprite = dungeon.content.Load<Texture2D>("chest");
         }
         
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
