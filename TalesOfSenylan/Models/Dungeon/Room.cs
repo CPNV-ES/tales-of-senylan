@@ -41,11 +41,15 @@ namespace TalesOfSenylan.Models.Dungeon
             this.dungeon = dungeon;
             _state = States.InGame;
             enemies = new List<Enemy>();
+            chests = new List<Chest>();
             this.contentManager = contentManager;
             font = contentManager.Load<SpriteFont>("font");
 
             for (var i = 0; i < DungeonUtilities.GetNumberOfEnemies(dungeon.dungeonNumber); i++)
-                enemies.Add(new Enemy(GenerateRandomStartingPosition(), this));
+                enemies.Add(new Enemy(GenerateRandomPosition(), this));
+
+            for (var i = 0; i < GetNumberOfChestsToGenerate(); i++)
+                chests.Add(new Chest(GenerateRandomPosition(), dungeon));
 
             GenerateRoomFloor();
         }
@@ -54,6 +58,7 @@ namespace TalesOfSenylan.Models.Dungeon
         public List<Enemy> enemies { get; set; }
         public ContentManager contentManager { get; }
         private Dungeon dungeon;
+        private List<Chest> chests;
 
         public void Update(GameTime gameTime)
         {
@@ -81,6 +86,15 @@ namespace TalesOfSenylan.Models.Dungeon
                         HandleWallCollisionEnemy(enemy);
                         enemy.Update(gameTime);
                     }
+                    foreach (var chest in chests.ToList())
+                    {
+                        if (player.IsCollided(chest.hitbox) &&
+                            (keyboardState.IsKeyDown(Keys.E)))
+                        {
+                            chest.Destroy();
+                            chests.Remove(chest);
+                        }
+                    }
                     break;
                 case States.InMenu:
                     if (keyboardState.IsKeyDown(Keys.P))
@@ -91,8 +105,7 @@ namespace TalesOfSenylan.Models.Dungeon
                 case States.LeavingMenu:
                     _state = States.InGame;
                     break;
-
-        }
+            }
         }
 
         private void HandleUIInput(GameTime gameTime)
@@ -119,10 +132,10 @@ namespace TalesOfSenylan.Models.Dungeon
                 case (States.InGame):
                     player.Draw(gameTime, spriteBatch);
                     foreach (var enemy in enemies) enemy.Draw(gameTime, spriteBatch);
+                    foreach (var chest in chests) chest.Draw(gameTime, spriteBatch);
                     DrawRoomFloor(spriteBatch);
                     break;
             }
-            
         }
 
         private void CheckRoomChange()
@@ -135,7 +148,7 @@ namespace TalesOfSenylan.Models.Dungeon
             }
         }
 
-        private static Vector2 GenerateRandomStartingPosition()
+        private static Vector2 GenerateRandomPosition()
         {
             var x = Utilities.Utilities.GetRandomNumber(20, Constants.GameWidth);
             var y = Utilities.Utilities.GetRandomNumber(20, Constants.GameHeight);
@@ -377,6 +390,16 @@ namespace TalesOfSenylan.Models.Dungeon
                             enemy.position.Y += 1f;
                         else if (j == tiles[0].Length - 1) enemy.position.Y -= 1f;
                     }
+        }
+        
+        public int GetNumberOfChestsToGenerate()
+        {
+            return Utilities.Utilities.GetRandomNumber(1, 3);
+        }
+
+        public Chest GenerateChests()
+        {
+            return new Chest(GenerateRandomPosition(), dungeon);
         }
 
         #region Only used by the maze generation algorithm

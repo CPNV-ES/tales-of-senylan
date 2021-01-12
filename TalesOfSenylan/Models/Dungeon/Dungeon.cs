@@ -42,7 +42,7 @@ namespace TalesOfSenylan.Models.Dungeon
             currentRoom = startingRoom;
         }
 
-        private Player player { get; }
+        public Player player { get; }
         public List<List<Room>> rooms { get; set; }
 
         public int dungeonNumber { get; }
