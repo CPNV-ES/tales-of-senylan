@@ -8,5 +8,22 @@ namespace TalesOfSenylan.Models.Items
         {
             this.name = name;
         }
+
+        public override int GetHashCode()
+        {
+            return name.GetHashCode();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            var item = obj as Item;
+
+            if (item == null)
+            {
+                return false;
+            }
+            
+            return name.Equals(item.name);
+        }
     }
 }

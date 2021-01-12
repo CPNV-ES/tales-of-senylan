@@ -44,7 +44,7 @@ namespace TalesOfSenylan
 
         public void LoadContent()
         {
-            sprite = dungeon.content.Load<Texture2D>("ball");
+            sprite = dungeon.content.Load<Texture2D>("knight");
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

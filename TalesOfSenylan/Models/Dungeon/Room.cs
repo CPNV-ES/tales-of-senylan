@@ -20,20 +20,36 @@ namespace TalesOfSenylan.Models.Dungeon
         private const int TileHeight = 16;
 
         private static Rectangle[][] tiles;
+        private SpriteFont font;
 
 
         private KeyboardState keyboardState;
+
+        enum States
+        {
+            InMenu,
+            LeavingMenu,
+            InGame
+        }
+
+        States _state;
 
         public Room(Vector2 position, Dungeon dungeon, Player player, ContentManager contentManager)
         {
             this.position = position;
             this.player = player;
             this.dungeon = dungeon;
+            _state = States.InGame;
             enemies = new List<Enemy>();
+            chests = new List<Chest>();
             this.contentManager = contentManager;
+            font = contentManager.Load<SpriteFont>("font");
 
             for (var i = 0; i < DungeonUtilities.GetNumberOfEnemies(dungeon.dungeonNumber); i++)
-                enemies.Add(new Enemy(GenerateRandomStartingPosition(), this));
+                enemies.Add(new Enemy(GenerateRandomPosition(), this));
+
+            for (var i = 0; i < GetNumberOfChestsToGenerate(); i++)
+                chests.Add(new Chest(GenerateRandomPosition(), dungeon));
 
             GenerateRoomFloor();
         }
@@ -42,31 +58,53 @@ namespace TalesOfSenylan.Models.Dungeon
         public List<Enemy> enemies { get; set; }
         public ContentManager contentManager { get; }
         private Dungeon dungeon;
+        private List<Chest> chests;
 
         public void Update(GameTime gameTime)
         {
             keyboardState = Keyboard.GetState();
-
-            HandleWallCollision(player.GetHitbox().ToRectangle());
             HandleUIInput(gameTime);
-            HandleMovementInput(gameTime);
-            player.Update(gameTime);
+            switch (_state) {
+                case States.InGame:
+                    HandleWallCollision(player.GetHitbox().ToRectangle());
+                    HandleMovementInput(gameTime);
+                    player.Update(gameTime);
 
-            // Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
-            CheckRoomChange();
+                    // Debug.WriteLine("Le joueur a: " + player.health + " Points de vie");
+                    CheckRoomChange();
 
-            //ToList() to make a copy of the list and remove an item safely from the original list
-            foreach (var enemy in enemies.ToList())
-            {
-                if (player.IsCollided(enemy.GetHitbox()) &&
-                    (keyboardState.IsKeyDown(Keys.Space) || keyboardState.IsKeyDown(Keys.K)))
-                {
-                    enemy.health -= GetDamagesInflicted(gameTime);
+                    //ToList() to make a copy of the list and remove an item safely from the original list
+                    foreach (var enemy in enemies.ToList())
+                    {
+                        if (player.IsCollided(enemy.GetHitbox()) &&
+                            (keyboardState.IsKeyDown(Keys.Space) || keyboardState.IsKeyDown(Keys.K)))
+                        {
+                            enemy.health -= GetDamagesInflicted(gameTime);
 
-                    if (enemy.health <= 0) enemies.Remove(enemy);
-                }
-                HandleWallCollisionEnemy(enemy);
-                enemy.Update(gameTime);
+                            if (enemy.health <= 0) enemies.Remove(enemy);
+                        }
+                        HandleWallCollisionEnemy(enemy);
+                        enemy.Update(gameTime);
+                    }
+                    foreach (var chest in chests.ToList())
+                    {
+                        if (player.IsCollided(chest.hitbox) &&
+                            (keyboardState.IsKeyDown(Keys.E)))
+                        {
+                            chest.Destroy();
+                            chests.Remove(chest);
+                        }
+                    }
+                    break;
+                case States.InMenu:
+                    if (keyboardState.IsKeyDown(Keys.P))
+                    {
+                        _state = States.LeavingMenu;
+                    }
+                    break;
+                case States.LeavingMenu:
+                    _state = States.InGame;
+                    break;
             }
         }
 
@@ -74,21 +112,24 @@ namespace TalesOfSenylan.Models.Dungeon
         {
             if (keyboardState.IsKeyDown(Keys.I))
             {
-                Debug.WriteLine("The player has the following items:");
-                foreach (KeyValuePair<Item, int> entry in player.inventory)
-                {
-                    Debug.WriteLine(entry.Key.name + ". Quantity: " + entry.Value);
-                }
+                _state = States.InMenu;
             }
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            player.Draw(gameTime, spriteBatch);
-
-            foreach (var enemy in enemies) enemy.Draw(gameTime, spriteBatch);
-
-            DrawRoomFloor(spriteBatch);
+            switch (_state)
+            {
+                case (States.InMenu):
+                    DrawInventory(spriteBatch);
+                    break;
+                case (States.InGame):
+                    player.Draw(gameTime, spriteBatch);
+                    foreach (var enemy in enemies) enemy.Draw(gameTime, spriteBatch);
+                    foreach (var chest in chests) chest.Draw(gameTime, spriteBatch);
+                    DrawRoomFloor(spriteBatch);
+                    break;
+            }
         }
 
         private void CheckRoomChange()
@@ -101,7 +142,7 @@ namespace TalesOfSenylan.Models.Dungeon
             }
         }
 
-        private static Vector2 GenerateRandomStartingPosition()
+        private static Vector2 GenerateRandomPosition()
         {
             var x = Utilities.Utilities.GetRandomNumber(20, Constants.GameWidth);
             var y = Utilities.Utilities.GetRandomNumber(20, Constants.GameHeight);
@@ -131,6 +172,16 @@ namespace TalesOfSenylan.Models.Dungeon
                 player.position.X += player.speed * (float) gameTime.ElapsedGameTime.TotalSeconds;
         }
 
+        private void DrawInventory(SpriteBatch sp)
+        {
+            Vector2 pos = new Vector2(50, 50);
+
+            foreach (KeyValuePair<Item, int> entry in player.inventory)
+            {
+                sp.DrawString(font, entry.Key.name + ". Quantity: " + entry.Value, pos, Color.White);
+                pos.Y += 50;
+            }
+        }
 
         private void GenerateRoomFloor()
         {
@@ -332,6 +383,16 @@ namespace TalesOfSenylan.Models.Dungeon
                             enemy.position.Y += 1f;
                         else if (j == tiles[0].Length - 1) enemy.position.Y -= 1f;
                     }
+        }
+        
+        public int GetNumberOfChestsToGenerate()
+        {
+            return Utilities.Utilities.GetRandomNumber(1, 3);
+        }
+
+        public Chest GenerateChests()
+        {
+            return new Chest(GenerateRandomPosition(), dungeon);
         }
 
         #region Only used by the maze generation algorithm

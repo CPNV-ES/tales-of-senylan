@@ -5,12 +5,15 @@ namespace TalesOfSenylan.Models.Items
 {
     public class Inventory : Dictionary<Item, int>
     {
-        public void AddItem(Item item)
+        public void AddItem(params Item[] items)
         {
             try
             {
-                var quantity = ContainsKey(item) ? this[item] + 1 : 1;
-                this[item] = quantity;
+                foreach (var item in items)
+                {
+                    var quantity = ContainsKey(item) ? this[item] + 1 : 1;
+                    this[item] = quantity;
+                }
             }
             catch (Exception e)
             {
